@@ -1,0 +1,293 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://example.com/object1650635866.json",
+    "title": "Root",
+    "type": "object",
+    "required": [
+        "specification",
+        "specification_type",
+        "predicates_info",
+        "measurement_source",
+        "measurement_points"
+    ],
+    "properties": {
+        "behavior_description": {
+            "$id": "#root/behavior_description",
+            "title": "Behavior_description",
+            "type": "string",
+            "default": "",
+            "examples": [
+                "A text description of the specified scenario"
+            ],
+            "pattern": "^.*$"
+        },
+        "specification": {
+            "$id": "#root/specification",
+            "title": "Specification",
+            "type": "string",
+            "default": "",
+            "examples": [
+                "After {resp_time_stable(resp_time)}, it is never the case that {resp_time_unstable(resp_time)} [holds].",
+                "always( ( once(resp_time_stable(resp_time)) ) -> ( ( not(resp_time_unstable(resp_time))) since resp_time_stable(resp_time) ) )"
+            ],
+            "pattern": "^.*$"
+        },
+        "specification_type": {
+            "$id": "#root/specification_type",
+            "title": "Specification_type",
+            "type": "string",
+            "default": "",
+            "examples": [
+                "psp",
+                "mtl"
+            ],
+            "pattern": "^.*$"
+        },
+        "predicates_info": {
+            "$id": "#root/predicates_info",
+            "title": "Predicates_info",
+            "type": "array",
+            "default": [],
+            "items": {
+                "$id": "#root/predicates_info/items",
+                "title": "Items",
+                "type": "object",
+                "required": [
+                    "predicate_name",
+                    "predicate_logic"
+                ],
+                "properties": {
+                    "predicate_description": {
+                        "$id": "#root/predicates_info/items/predicate_description",
+                        "title": "Predicate_description",
+                        "type": "string",
+                        "default": "",
+                        "examples": [
+                            "A text description of the specified predicate"
+                        ],
+                        "pattern": "^.*$"
+                    },
+                    "predicate_name": {
+                        "$id": "#root/predicates_info/items/predicate_name",
+                        "title": "Predicate_name",
+                        "type": "string",
+                        "default": "",
+                        "examples": [
+                            "resp_time_stable"
+                        ],
+                        "pattern": "^.*$"
+                    },
+                    "predicate_comparison_value": {
+                        "$id": "#root/predicates_info/items/predicate_comparison_value",
+                        "title": "Predicate_comparison_value",
+                        "type": "string",
+                        "default": "",
+                        "examples": [
+                            "0.5"
+                        ],
+                        "pattern": "^.*$"
+                    },
+                    "predicate_logic": {
+                        "$id": "#root/predicates_info/items/predicate_logic",
+                        "title": "Predicate_logic",
+                        "type": "string",
+                        "default": "",
+                        "examples": [
+                            "smaller"
+                        ],
+                        "pattern": "^.*$"
+                    }
+                },
+                "if": {
+                    "properties": {
+                        "predicate_logic": {
+                            "pattern": "^smaller|smallerEqual|bigger|biggerEqual|equal|notEqual$"
+                        }
+                    }
+                },
+                "then": {
+                    "required": [
+                        "predicate_comparison_value"
+                    ]
+                }
+            }
+        },
+        "measurement_source": {
+            "$id": "#root/measurement_source",
+            "title": "Measurement_source",
+            "type": "string",
+            "default": "",
+            "examples": [
+                "prometheus"
+            ],
+            "pattern": "^.*$"
+        },
+        "remote-csv-address": {
+            "$id": "#root/remote-csv-address",
+            "title": "Remote CSV Address",
+            "type": "string",
+            "default": "",
+            "examples": [
+                "localhost:8000/data"
+            ],
+            "pattern": "^.*$"
+        },
+        "measurement_points": {
+            "$id": "#root/measurement_points",
+            "title": "Measurement_points",
+            "type": "array",
+            "default": [],
+            "items": {
+                "$id": "#root/measurement_points/items",
+                "title": "Items",
+                "type": "object",
+                "required": [
+                    "measurement_name"
+                ],
+                "properties": {
+                    "measurement_name": {
+                        "$id": "#root/measurement_points/items/measurement_name",
+                        "title": "Measurement_name",
+                        "type": "string",
+                        "default": "",
+                        "examples": [
+                            "resp_time"
+                        ],
+                        "pattern": "^.*$"
+                    },
+                    "measurement_query": {
+                        "$id": "#root/measurement_points/items/measurement_query",
+                        "title": "Measurement_query",
+                        "type": "string",
+                        "default": "",
+                        "examples": [
+                            "rate(container_cpu_usage_seconds_total{container='api-gateway'}[5m])"
+                        ],
+                        "pattern": "^.*$"
+                    },
+                    "start_time": {
+                        "$id": "#root/measurement_points/items/start_time",
+                        "title": "Start_time",
+                        "type": "string",
+                        "default": "",
+                        "examples": [
+                            "1h"
+                        ],
+                        "pattern": "^.*$"
+                    },
+                    "end_time": {
+                        "$id": "#root/measurement_points/items/end_time",
+                        "title": "End_time",
+                        "type": "string",
+                        "default": "",
+                        "examples": [
+                            "now"
+                        ],
+                        "pattern": "^.*$"
+                    },
+                    "steps": {
+                        "$id": "#root/measurement_points/items/steps",
+                        "title": "Steps",
+                        "type": "string",
+                        "default": "",
+                        "examples": [
+                            "1"
+                        ],
+                        "pattern": "^.*$"
+                    }
+                }
+            }
+        }
+    },
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "measurement_source": {
+                        "pattern": "^prometheus$"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "measurement_points": {
+                        "items": {
+                            "required": [
+                                "measurement_query",
+                                "start_time",
+                                "end_time",
+                                "steps"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "measurement_source": {
+                        "pattern": "^influx$"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "measurement_points": {
+                        "items": {
+                            "required": [
+                                "measurement_query"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "measurement_source": {
+                        "pattern": "^csv$"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "measurement_points": {
+                        "items": {
+                            "required": [
+                                "measurement_column"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "measurement_source": {
+                        "pattern": "^remote-csv$"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "items": {
+                        "required": [
+                            "remote-csv-address"
+                        ]
+                    },
+                    "measurement_points": {
+                        "items": {
+                            "required": [
+                                "measurement_column"
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}
