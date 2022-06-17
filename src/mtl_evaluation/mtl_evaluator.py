@@ -23,9 +23,6 @@ class MTLEvaluator():
             "mtl.monitor("+'"'+formula+"\","+params_string+",print_source_code=True)")
         predicate_input_values = []
 
-        print("data array.................", len(
-            data_array[0]))
-
         for j in range(len(data_array[0])):
             eval_string = "my_mtl_monitor.update("
             for i in range(len(data_array)):
@@ -46,7 +43,7 @@ class MTLEvaluator():
                 "my_mtl_monitor.update", "")+")")
 
             eval_string = eval_string+")"
-            print("EVAL", eval_string)
+
             output = eval(eval_string)
             print(my_mtl_monitor.time, output,
                   my_mtl_monitor.states, predicate_input_values[-1])
