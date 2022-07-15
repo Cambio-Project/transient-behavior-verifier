@@ -1,0 +1,8 @@
+{
+  "name": "Minimal Scenario",
+  "duration": 120,
+  "seed": 42,
+  "artifact": "gateway",
+  "component": "ALL ENDPOINTS",
+  "stimulus": "LOAD~ ./Examples/PaperExample/constant_loadArrivalRates_120sec.csv AND KILL service1 1@30"
+}
