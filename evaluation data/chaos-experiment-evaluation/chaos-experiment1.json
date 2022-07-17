@@ -1,0 +1,97 @@
+{
+   "title":"Terminate one service pod",
+   "description":"Terminating one service1 pod and observing steady state hypothesis and transient behavior",
+   "tags":[
+      "kubernetes"
+   ],
+   "steady-state-hypothesis":{
+      "title":"Verifying service remains healthy",
+      "probes":[
+         {
+            "name":"deployment-is-fully-available",
+            "type":"probe",
+            "tolerance":true,
+            "provider":{
+               "type":"python",
+               "module":"chaosk8s.probes",
+               "func":"deployment_fully_available",
+               "arguments":{
+                  "name":"Service1"
+               }
+            }
+         },
+         {
+            "name":"check-transient-behaviors",
+            "type":"probe",
+            "tolerance":{
+               "type":"jsonpath",
+               "path":"$.result",
+               "target":"body",
+               "expect":[
+                  "True"
+               ]
+            },
+            "provider":{
+               "type":"http",
+               "url":"http://localhost:5000/monitor",
+               "method":"POST",
+               "headers":{
+                  "Content-Type":"application/json"
+               },
+               "arguments":{
+                  "behavior_description":"Always when the instance count of a Service1 drops from 2 to 1, a new instance has to be spawned in max 30 sec",
+                  "specification":"always(((instances_dead(instances) and (resp_time_normal(resp_time)) ) since[0,30] instances_normal(instances)))",
+                  "specification_type":"mtl",
+                  "predicates_info":[
+                     {
+                        "predicate_name":"resp_time_normal",
+                        "predicate_logic":"smallerEqual",
+                        "predicate_comparison_value":"100"
+                     },
+                     {
+                        "predicate_name":"instances_normal",
+                        "predicate_logic":"equal",
+                        "predicate_comparison_value":"2"
+                     },
+                     {
+                        "predicate_name":"instances_dead",
+                        "predicate_logic":"smaller",
+                        "predicate_comparison_value":"2"
+                     }
+                  ],
+                  "measurement_source":"influx",
+                  "measurement_points":[
+                     {
+                        "measurement_name":"resp_time",
+                        "measurement_query":"SELECT \"AvgResponseTime\" FROM \"TimeBatchRuns\".\"autogen\".\"Batch_Time\""
+                     },
+                     {
+                        "measurement_name":"instances",
+                        "measurement_query":"SELECT \"counts\" FROM \"AliveInstances\".\"autogen\".\"InstanceCounts\""
+                     }
+                  ]
+               }
+            }
+         }
+      ]
+   },
+   "method":[
+      {
+         "type":"action",
+         "name":"terminate-service1-pod",
+         "provider":{
+            "type":"python",
+            "module":"chaosk8s.pod.actions",
+            "func":"terminate_pods",
+            "arguments":{
+               "name_pattern":"Service1",
+               "rand":true
+            }
+         },
+         "pauses":{
+            "before":30,
+            "after":90
+         }
+      }
+   ]
+}

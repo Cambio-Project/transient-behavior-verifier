@@ -1,0 +1,3 @@
+---
+name : "AbsentBR100"
+pattern : "historically({r} -> (historically[:100](not {p})))"

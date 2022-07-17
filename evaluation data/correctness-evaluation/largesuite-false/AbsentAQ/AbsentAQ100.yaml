@@ -1,0 +1,3 @@
+---
+name : "AbsentAQ100"
+pattern : "historically((once[:100]({q})) -> ((not {p}) since {q}))"

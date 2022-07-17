@@ -1,0 +1,92 @@
+{
+   "title":"Increasing workload scenario",
+   "description":"Increasing load and observing steady state hypothesis and transient behavior",
+   "tags":[
+      "kubernetes"
+   ],
+   "steady-state-hypothesis":{
+      "title":"Verifying service remains healthy",
+      "probes":[
+         {
+            "name":"deployment-is-fully-available",
+            "type":"probe",
+            "tolerance":true,
+            "provider":{
+               "type":"python",
+               "module":"chaosk8s.probes",
+               "func":"deployment_fully_available",
+               "arguments":{
+                  "name":"Service1"
+               }
+            }
+         },
+         {
+            "name":"check-transient-behaviors",
+            "type":"probe",
+            "tolerance":{
+               "type":"jsonpath",
+               "path":"$.result",
+               "target":"body",
+               "expect":[
+                  "True"
+               ]
+            },
+            "provider":{
+               "type":"http",
+               "url":"http://localhost:5000/monitor",
+               "method":"POST",
+               "headers":{
+                  "Content-Type":"application/json"
+               },
+               "arguments":{
+                  "behavior_description":"description",
+                  "specification":"always(load_normal(serv1) and load_normal(serv2))",
+                  "specification_type":"mtl",
+                  "predicates_info":[
+                     {
+                        "predicate_name":"load_normal",
+                        "predicate_description":"description",
+                        "predicate_comparison_value":"0.8",
+                        "predicate_logic":"smaller"
+                     }
+                  ],
+                  "measurement_source":"prometheus",
+                  "measurement_points":[
+                     {
+                        "measurement_name":"serv1",
+                        "measurement_query":" (rate (container_cpu_usage_seconds_total{ pod='Service1-588bdc5d88-tkclz'}[1m])) ",
+                        "start_time":"12m",
+                        "end_time":"now",
+                        "steps":"1"
+                     },
+                     {
+                        "measurement_name":"serv2",
+                        "measurement_query":" (rate (container_cpu_usage_seconds_total{pod='Service1-588bdc5d88-bvfn5'}[1m])) ",
+                        "start_time":"12m",
+                        "end_time":"now",
+                        "steps":"1"
+                     }
+                  ]
+               }
+            }
+         }
+      ]
+   },
+   "method":[
+      {
+         "type":"action",
+         "name":"do-nothing",
+         "provider":{
+            "type":"python",
+            "module":"chaosk8s.probes",
+            "func":"deployment_fully_available",
+            "arguments":{
+               "name":"Service1"
+            }
+         },
+         "pauses":{
+            "after":620
+         }
+      }
+   ]
+}

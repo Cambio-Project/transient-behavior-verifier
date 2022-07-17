@@ -1,0 +1,28 @@
+{
+   "specification":"Before {instance_up(instance_count)}, it is never the case that {resp_time_high(resp_time)} [holds].",
+   "specification_type":"psp",
+   "predicates_info":[
+      {
+         "predicate_name":"instance_up",
+         "predicate_description":"A new instance has been spawned.",
+         "predicate_logic":"trendUpwardStrict"
+      },
+      {
+         "predicate_name":"resp_time_high",
+         "predicate_description":"Response time is too high when higher than 0.5.",
+         "predicate_comparison_value":"0.5",
+         "predicate_logic":"bigger"
+      }
+   ],
+   "measurement_source":"csv",
+   "measurement_points":[
+      {
+         "measurement_name":"instance_count",
+         "measurement_column":"instance_count"
+      },
+      {
+         "measurement_name":"resp_time",
+         "measurement_column":"resp_time"
+      }
+   ]
+}

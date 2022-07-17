@@ -1,0 +1,92 @@
+{
+   "title":"Increasing workload scenario",
+   "description":"Increasing load and observing steady state hypothesis and transient behavior",
+   "tags":[
+      "kubernetes"
+   ],
+   "steady-state-hypothesis":{
+      "title":"Verifying service remains healthy",
+      "probes":[
+         {
+            "name":"deployment-is-fully-available",
+            "type":"probe",
+            "tolerance":true,
+            "provider":{
+               "type":"python",
+               "module":"chaosk8s.probes",
+               "func":"deployment_fully_available",
+               "arguments":{
+                  "name":"Service1"
+               }
+            }
+         },
+         {
+            "name":"check-transient-behaviors",
+            "type":"probe",
+            "tolerance":{
+               "type":"jsonpath",
+               "path":"$.result",
+               "target":"body",
+               "expect":[
+                  "True"
+               ]
+            },
+            "provider":{
+               "type":"http",
+               "url":"http://localhost:5000/monitor",
+               "method":"POST",
+               "headers":{
+                  "Content-Type":"application/json"
+               },
+               "arguments":{
+                  "behavior_description":"A text description of the specified scenario",
+                  "specification":"Globally, if {resp_time_high(resp_time)} [has occurred] then in response {instance_increase(instance_count)} [eventually holds] between 30 and 60 time units.",
+                  "specification_type":"psp",
+                  "predicates_info":[
+                     {
+                        "predicate_name":"resp_time_high",
+                        "predicate_description":"Response time is higher than 100ms",
+                        "predicate_comparison_value":"100",
+                        "predicate_logic":"biggerEqual"
+                     },
+                     {
+                        "predicate_name":"instance_increase",
+                        "predicate_description":"Instance counts increase",
+                        "predicate_comparison_value":"2",
+                        "predicate_logic":"bigger"
+                     }
+                  ],
+                  "measurement_source":"influx",
+                  "measurement_points":[
+                     {
+                        "measurement_name":"resp_time",
+                        "measurement_query":"SELECT \"AvgResponseTime\" FROM \"TimeBatchRuns\".\"autogen\".\"Batch_Time\""
+                     },
+                     {
+                        "measurement_name":"instance_count",
+                        "measurement_query":"SELECT \"counts\" FROM \"AliveInstances\".\"autogen\".\"InstanceCounts\""
+                     }
+                  ]
+               }
+            }
+         }
+      ]
+   },
+   "method":[
+      {
+         "type":"action",
+         "name":"do-nothing",
+         "provider":{
+            "type":"python",
+            "module":"chaosk8s.probes",
+            "func":"deployment_fully_available",
+            "arguments":{
+               "name":"Service1"
+            }
+         },
+         "pauses":{
+            "after":620
+         }
+      }
+   ]
+}

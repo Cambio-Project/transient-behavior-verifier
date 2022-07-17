@@ -1,0 +1,23 @@
+{
+   "specification":" always(instance_dead(instance_count) since[0,3] instance_alive(instance_count)) ",
+   "specification_type":"mtl",
+   "predicates_info":[
+      {
+         "predicate_name":"instance_alive",
+         "predicate_comparison_value":"2",
+         "predicate_logic":"equal"
+      },
+      {
+         "predicate_name":"instance_dead",
+         "predicate_comparison_value":"1",
+         "predicate_logic":"equal"
+      }
+   ],
+   "measurement_source":"csv",
+   "measurement_points":[
+      {
+         "measurement_name":"instance_count",
+         "measurement_column":"instance_count"
+      }
+   ]
+}
