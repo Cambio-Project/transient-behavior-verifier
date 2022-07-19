@@ -5,7 +5,9 @@ from handlers.psp_patterns import *
 
 
 class PSPMapper():
+    """A class responsible for the mapping of PSPs to past-MTL formulas"""
 
+    # maps a pattern regex to the past-MTL formula
     def map_pattern(input_pattern):
 
         list_predicates = re.findall('\{\S+\}|\{.+\}|\d+', input_pattern)
@@ -16,10 +18,7 @@ class PSPMapper():
             list_predicates_cleaned.append(item)
         list_predicates = list_predicates_cleaned
 
-        # print("list predicates", list_predicates )
-
         output = None
-        # can update these to format strings
         if(re.match(absence_after_q, input_pattern)):
             output = "always((once("+list_predicates[0]+")) -> ((not " + \
                 list_predicates[1]+") since "+list_predicates[0]+"))"
@@ -38,8 +37,8 @@ class PSPMapper():
                 "](not "+list_predicates[1]+")))"
 
         elif(re.match(absence_between_q_and_r, input_pattern)):
-            output = "always("+list_predicates[1]+" && !"+list_predicates[0]+" && once " + \
-                list_predicates[0]+")->((not "+list_predicates[2] + \
+            output = "always("+list_predicates[1]+" && not("+list_predicates[0]+") && once(" + \
+                list_predicates[0]+"))->((not "+list_predicates[2] + \
                 ") since "+list_predicates[0]+")"
 
         elif(re.match(bounded_absence_between_q_and_r, input_pattern)):
@@ -96,4 +95,5 @@ class PSPMapper():
             print("Pattern could not be matched!")
             raise Exception("PSP pattern could not be matched!")
 
+        print("MTL Formula:", output)
         return output

@@ -4,7 +4,9 @@ import configparser
 
 
 class InfluxDataRetriever(DataRetriever):
+    """ A class extending the abstract DataRetriever class and implementing the retrieval of InfluxDB data. """
 
+    # retrieves the last RunID from the TimeBatchRuns database
     def get_last_runid_from_batch_runs(self):
         config_obj = configparser.ConfigParser()
         config_obj.read("config.ini")
@@ -21,6 +23,7 @@ class InfluxDataRetriever(DataRetriever):
 
         return last_id
 
+    # retrieves the last RunID from the AliveInstances database
     def get_last_runid_from_alive_instances(self):
         config_obj = configparser.ConfigParser()
         config_obj.read("config.ini")
@@ -51,7 +54,6 @@ class InfluxDataRetriever(DataRetriever):
             points_names[item['measurement_name']] = item['measurement_query']
         points_data = {}
         for key, value in points_names.items():
-            # print(key, value)
             if("TimeBatchRuns" in value):
                 last_id = self.get_last_runid_from_batch_runs()
                 client.switch_database('TimeBatchRuns')
@@ -87,26 +89,3 @@ class InfluxDataRetriever(DataRetriever):
                 #     "Data points do not have the same dimensions/lengths!")
 
         return list(points_names.keys()), data_multi_dim_array
-
-    def retrieve_data_influx_hardcoded_test(self):
-        config_obj = configparser.ConfigParser()
-        config_obj.read("config.ini")
-        influxdb_host = config_obj["influxdb"]['influxdb_host']
-        influxdb_port = config_obj["influxdb"]['influxdb_port']
-        client = InfluxDBClient(host=influxdb_host, port=influxdb_port)
-        client.switch_database('TimeBatchRuns')
-        result = client.query(
-            'SELECT * FROM "TimeBatchRuns"."autogen"."Run_StartStop"')
-        points = result.get_points()
-        last_id = None
-
-        for item in points:
-            last_id = item['RunID']
-
-        result = client.query(
-            ' SELECT "AvgResponseTime" FROM "TimeBatchRuns"."autogen"."Batch_Time" WHERE "RunID"=\'' + last_id+'\' ')
-        points = result.get_points()
-        data_points = []
-        for item in points:
-            data_points.append(item['AvgResponseTime'])
-        return data_points

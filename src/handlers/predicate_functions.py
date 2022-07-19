@@ -2,10 +2,10 @@ from numpy import var
 
 
 class Predicates:
+    """A class containing the predicate functions"""
 
-    def __init__(self, value=None, limitVar=None):
+    def __init__(self, value=None):
         self.value = value
-        self.limitVar = limitVar
         self.trendLast = None
 
     def equal(self, variable):
@@ -29,12 +29,10 @@ class Predicates:
     def boolean(self, boolean_value):
         return boolean_value
 
-    # new functions
-
     def trendUpward(self, variable):
         if(self.trendLast is None):
             self.trendLast = variable
-            return True
+            return False
         else:
             if(self.trendLast <= variable):
                 self.trendLast = variable
@@ -46,7 +44,7 @@ class Predicates:
     def trendUpwardStrict(self, variable):
         if(self.trendLast is None):
             self.trendLast = variable
-            return True
+            return False
         else:
             if(self.trendLast < variable):
                 self.trendLast = variable
@@ -58,7 +56,7 @@ class Predicates:
     def trendDownward(self, variable):
         if(self.trendLast is None):
             self.trendLast = variable
-            return True
+            return False
         else:
             if(self.trendLast >= variable):
                 self.trendLast = variable
@@ -70,7 +68,7 @@ class Predicates:
     def trendDownwardStrict(self, variable):
         if(self.trendLast is None):
             self.trendLast = variable
-            return True
+            return False
         else:
             if(self.trendLast > variable):
                 self.trendLast = variable
@@ -78,17 +76,3 @@ class Predicates:
             else:
                 self.trendLast = variable
                 return False
-
-    # def biggerDynamic(value1, value2):
-    #     return value1 > value2
-
-    # def smallerDynamic(value1, value2):
-    #     return value1 > value2
-
-    # def equalDynamic(value1, value2):
-    #     return value1 > value2
-
-    # make sure to make this is consistent
-    # def interval(self, variable):
-        # print(self.value,variable,self.limitVar,self.value < variable < self.limitVar)
-        # return self.value < variable < self.limitVar

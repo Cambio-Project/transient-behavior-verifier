@@ -6,7 +6,9 @@ from prometheus_api_client import PrometheusConnect
 
 
 class PrometheusDataRetriever(DataRetriever):
+    """ A class extending the abstract DataRetriever class and implementing the retrieval of Prometheus data. """
 
+    # retrieves Prometheus data by executing the Prometheus queries
     def retrieve_data(self, points_info):
         config_obj = configparser.ConfigParser()
         config_obj.read("config.ini")

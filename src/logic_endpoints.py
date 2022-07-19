@@ -1,7 +1,9 @@
+from audioop import mul
 import jsonschema
 from jsonschema import validate
 import json
 from flask import Flask, make_response, request, jsonify, abort, render_template, Response, send_file, Blueprint
+import numpy
 from data_retrieval.csv_data_retriever import CSVDataRetriever
 from data_retrieval.influx_data_retriever import InfluxDataRetriever
 from data_retrieval.prometheus_data_retriever import PrometheusDataRetriever
@@ -9,6 +11,7 @@ from handlers.formula_handler import FormulaHandler
 from mtl_evaluation.mtl_evaluator import MTLEvaluator
 import handlers.predicate_functions as predicate_functions
 import pandas as pd
+import configparser
 
 logic_api = Blueprint('logic_api', __name__)
 
@@ -47,13 +50,23 @@ def start_evaluation(formula, params_string, points_info, measurement_source, fo
             multi_dim_array, column_names, points_names = CSVDataRetriever().retrieve_data(df,
                                                                                            points_info)
 
-    mtl_eval_output, intervals = MTLEvaluator().evaluate(
-        formula, params_string, points_names, multi_dim_array)
+    # if the formula is in future-MTL the trace is reversed and the results also
+    if('future-mtl' in formula_info):
+        reverse_array = multi_dim_array
+        for array in reverse_array:
+            array = array.reverse()
+        mtl_eval_output, intervals = MTLEvaluator().evaluate(
+            formula, params_string, points_names, reverse_array, reverse=True)
+
+    else:
+        mtl_eval_output, intervals = MTLEvaluator().evaluate(
+            formula, params_string, points_names, multi_dim_array, reverse=False)
 
     result_dict = {}
     result_dict['result'] = str(mtl_eval_output[-1])
     result_dict['intervals'] = intervals
     print("Evaluation result:", result_dict['result'])
+
     # Make CTK fail on purpose when probe in method:
     # if(str(mtl_eval_output[-1])=="False"):
     #     sleep(5)
@@ -68,20 +81,16 @@ def check_json_schema(formula_info):
     try:
         validate(instance=formula_info, schema=schema)
     except jsonschema.exceptions.ValidationError as err:
-        # print(err)
         raise Exception(
             "JSON Body is invalid! Some fields are incorrect or missing!")
 
 
 @logic_api.route('/insert_spec_into_exp', methods=['POST'])
 def insert_spec_into_exp():
-    print(request.form, request.files)
     json_file = request.files['exp_json']
     myfile = json_file.read()
     behav_spec = json.loads(request.form["formula_json"])
     json_obj = json.loads(myfile)
-
-    print(behav_spec, json_obj)
 
     trans_behav_probe = {}
     trans_behav_probe["name"] = "Transient Behavior Check"
@@ -97,7 +106,13 @@ def insert_spec_into_exp():
 
     provider_obj = {}
     provider_obj["type"] = "http"
-    provider_obj["url"] = "http://localhost:5000/monitor"
+
+    config_obj = configparser.ConfigParser()
+    config_obj.read("config.ini")
+    host_address = config_obj["main_api"]['api_host'] + \
+        ':'+config_obj["main_api"]['api_port']
+    provider_obj["url"] = host_address+"/monitor"
+
     provider_obj["method"] = "POST"
     provider_obj["headers"] = {"Content-Type": "application/json"}
     provider_obj["arguments"] = behav_spec
@@ -117,12 +132,10 @@ def save_spec():
     specification = request.form['mtl_formula']
     behav_description = request.form['mtl_description']
     list_predicate_numbers = []
-    print(request.form)
     for item in request.form:
         if("pred_name_" in item and item[-1].isnumeric()):
             list_predicate_numbers.append(item[-1])
     set_predicate_numbers = set(list_predicate_numbers)
-    print("pred numbers", set_predicate_numbers)
 
     dict_spec = {}
     dict_spec["behavior_description"] = behav_description
@@ -143,8 +156,9 @@ def save_spec():
     for item in request.form:
         if("measurement_query_" in item and item[-1].isnumeric()):
             list_measurement_infos_numbers.append(item[-1])
+        elif("measurement_column_" in item and item[-1].isnumeric()):
+            list_measurement_infos_numbers.append(item[-1])
     set_measurement_infos_numbers = set(list_measurement_infos_numbers)
-    print("measurement numbers", set_measurement_infos_numbers)
     dict_spec["measurement_source"] = request.form["measurement_select"]
     if(dict_spec["measurement_source"] == "influx"):
         dict_spec["measurement_points"] = []
@@ -163,8 +177,13 @@ def save_spec():
             measurement_to_add["end_time"] = request.form["end_time_"+measr_number]
             measurement_to_add["steps"] = request.form["steps_"+measr_number]
             dict_spec["measurement_points"].append(measurement_to_add)
-
-    print(json.dumps(dict_spec))
+    elif(dict_spec["measurement_source"] == "csv"):
+        dict_spec["measurement_points"] = []
+        for measr_number in set_measurement_infos_numbers:
+            measurement_to_add = {}
+            measurement_to_add["measurement_name"] = request.form["measurement_name_"+measr_number]
+            measurement_to_add["measurement_column"] = request.form["measurement_column_"+measr_number]
+            dict_spec["measurement_points"].append(measurement_to_add)
 
     with open('outputs/specification.json', 'w') as fp:
         json.dump(dict_spec, fp, indent=4)
@@ -175,6 +194,4 @@ def save_spec():
 @logic_api.route('/result', methods=['GET', 'POST'])
 def result_endpoint():
     output = json.loads(monitor())
-    # print(output)
-    # print("output intervals", output['intervals'])
     return render_template('result_page.html', result=output['result'], intervals=output['intervals'])

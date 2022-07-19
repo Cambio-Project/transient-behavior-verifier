@@ -17,19 +17,8 @@ class FormulaHandler():
         for predicate in formula_info["predicates_info"]:
             print(predicate)
             if(param_counter == 0):
-                if('interval' in predicate['predicate_logic']):
-                    params_string = params_string + \
-                        predicate['predicate_name']+'=' + \
-                        "predicate_functions.Predicates("+predicate['predicate_comparison_value'] + \
-                        ","+predicate['predicate_limit'] + \
-                        ")."+predicate['predicate_logic']+""
-                elif('boolean' in predicate['predicate_logic'] or "Dynamic" in predicate['predicate_logic']):
-                    params_string = params_string + \
-                        predicate['predicate_name']+'=' + \
-                        "predicate_functions.Predicates()." + \
-                        predicate['predicate_logic']+""
 
-                elif('trend' in predicate['predicate_logic']):
+                if('boolean' in predicate['predicate_logic'] or 'trend' in predicate['predicate_logic']):
                     params_string = params_string + \
                         predicate['predicate_name']+'=' + \
                         "predicate_functions.Predicates()." + \
@@ -41,19 +30,8 @@ class FormulaHandler():
                         "predicate_functions.Predicates("+predicate['predicate_comparison_value'] + \
                         ")."+predicate['predicate_logic']+""
             else:
-                if('interval' in predicate['predicate_logic']):
-                    params_string = params_string+"," + \
-                        predicate['predicate_name']+'=' + \
-                        "predicate_functions.Predicates("+predicate['predicate_comparison_value'] + \
-                        ","+predicate['predicate_limit'] + \
-                        ")."+predicate['predicate_logic']+""
-                elif('boolean' in predicate['predicate_logic'] or "Dynamic" in predicate['predicate_logic']):
-                    params_string = params_string+"," + \
-                        predicate['predicate_name']+'=' + \
-                        "predicate_functions.Predicates()." + \
-                        predicate['predicate_logic']+""
 
-                elif('trend' in predicate['predicate_logic']):
+                if('boolean' in predicate['predicate_logic'] or "trend" in predicate['predicate_logic']):
                     params_string = params_string+"," + \
                         predicate['predicate_name']+'=' + \
                         "predicate_functions.Predicates()." + \
@@ -70,5 +48,5 @@ class FormulaHandler():
 
         params_string = params_string+""
 
-        print("params ---", params_string)
+        # print("params ---", params_string)
         return formula, params_string

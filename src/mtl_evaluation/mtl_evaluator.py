@@ -7,7 +7,15 @@ import re
 
 
 class MTLEvaluator():
-    def evaluate(self, formula, params_string, points_names, data_array):
+    """A class responsible for the execution of the formula verification"""
+
+    # executes the verification
+    def evaluate(self, formula, params_string, points_names, data_array, reverse=False):
+
+        # creates empty result log file
+        with open("result_log.txt", 'w') as f:
+            pass
+
         mtl_eval_output = []
         predicate_comparison_values = params_string.split(',')
         predicate_values_string = ''
@@ -21,8 +29,8 @@ class MTLEvaluator():
 
         my_mtl_monitor = eval(
             "mtl.monitor("+'"'+formula+"\","+params_string+",print_source_code=True)")
-        predicate_input_values = []
 
+        predicate_input_values = []
         for j in range(len(data_array[0])):
             eval_string = "my_mtl_monitor.update("
             for i in range(len(data_array)):
@@ -43,18 +51,38 @@ class MTLEvaluator():
                 "my_mtl_monitor.update", "")+")")
 
             eval_string = eval_string+")"
-
             output = eval(eval_string)
             print(my_mtl_monitor.time, output,
                   my_mtl_monitor.states, predicate_input_values[-1])
             mtl_eval_output.append(output)
+
+            with open("result_log.txt", "a") as external_file:
+                add_text = my_mtl_monitor.time, output, my_mtl_monitor.states, predicate_input_values[-1]
+                print(add_text, file=external_file)
+                external_file.close()
+
+        # when the behavior is in future-MTL the results have to reversed
+        if(reverse is True):
+            reverse_array = data_array
+            for array in reverse_array:
+                array = array.reverse()
+
+            if(all(mtl_eval_output) or (not any(mtl_eval_output))):
+                # skip
+                pass
+            else:
+                mtl_eval_output = [str(value) for value in mtl_eval_output]
+                mtl_eval_output.reverse()
+                mtl_eval_output = [
+                    value == "True" for value in mtl_eval_output]
+                mtl_eval_output = [not value for value in mtl_eval_output]
 
         intervals = MTLPlotter(mtl_eval_output, points_names,
                                data_array, predicate_input_values).create_plot()
 
         for i in range(len(intervals)):
             if intervals[i][2] == False:
-                intervals[i] = (intervals[i][0]+1, intervals[i][1], intervals[i][2],
-                                predicate_values_string+" Input measurements: "+predicate_input_values[intervals[i][0]+1]+' at time ' + str(intervals[i][0]+1) + ';')
+                intervals[i] = (intervals[i][0], intervals[i][1], intervals[i][2],
+                                predicate_values_string+" Input measurements: "+predicate_input_values[intervals[i][0]]+' at time ' + str(intervals[i][0]) + ';')
 
         return mtl_eval_output, intervals
