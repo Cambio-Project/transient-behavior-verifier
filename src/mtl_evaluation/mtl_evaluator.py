@@ -61,24 +61,8 @@ class MTLEvaluator():
                 print(add_text, file=external_file)
                 external_file.close()
 
-        # when the behavior is in future-MTL the results have to reversed
-        if(reverse is True):
-            reverse_array = data_array
-            for array in reverse_array:
-                array = array.reverse()
-
-            if(all(mtl_eval_output) or (not any(mtl_eval_output))):
-                # skip
-                pass
-            else:
-                mtl_eval_output = [str(value) for value in mtl_eval_output]
-                mtl_eval_output.reverse()
-                mtl_eval_output = [
-                    value == "True" for value in mtl_eval_output]
-                mtl_eval_output = [not value for value in mtl_eval_output]
-
         intervals = MTLPlotter(mtl_eval_output, points_names,
-                               data_array, predicate_input_values).create_plot()
+                               data_array, predicate_input_values, reverse).create_plot()
 
         for i in range(len(intervals)):
             if intervals[i][2] == False:

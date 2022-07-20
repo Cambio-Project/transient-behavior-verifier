@@ -8,12 +8,13 @@ import numpy as np
 class MTLPlotter():
     """A class responsible for the plotting of the results"""
 
-    def __init__(self,  mtl_results, points_names, data_array, predicate_values):
+    def __init__(self,  mtl_results, points_names, data_array, predicate_values, reverse=False):
         self.mtl_results = mtl_results
         self.point_names = points_names
         self.data_array = data_array
         self.predicate_values = predicate_values
         self.colors = ['blue', 'red', 'purple', 'black', 'maroon']
+        self.reverse = reverse
 
     def return_last_result(self):
         return str(self.mtl_results[-1])
@@ -23,7 +24,13 @@ class MTLPlotter():
         y_offset = 1.10
 
         fig, ax = plt.subplots()
-        plt.xlabel('time')
+
+        if self.reverse:
+            plt.xlabel('reversed time (future-MTL converted)')
+
+        else:
+            plt.xlabel('time')
+
         for i in range(len(self.data_array)):
             if i == 0:
                 color = random.choice(self.colors)
@@ -75,6 +82,7 @@ class MTLPlotter():
 
         fig.legend(loc='upper center', bbox_to_anchor=(0.5, -0.05),
                    fancybox=True, shadow=True, ncol=2)
+
         plt.savefig('static/results.pdf', bbox_inches="tight")
         # plt.show()
 
