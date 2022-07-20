@@ -1,0 +1,351 @@
+{
+	"variables": [],
+	"info": {
+		"name": "future-smallsuite-false-evaluation",
+		"_postman_id": "01a4c75b-6a80-18f4-1c54-def3a87b7204",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "AbsentAQ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(  q(y) -> always[0,10](not(p(x)))  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/smallsuite-false/AbsentAQ.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"q\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AbsentBQR",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always( (  q(x) and !r(z) and once(r(z)) ) -> ( (not p(y)) since[3,10] r(z) )  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/smallsuite-false/AbsentBQR.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"q\"\n        },\n        {\n        \t\"measurement_name\":\"z\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AbsentBR",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always((once[0,10](r(y))) -> ((not p(x)) since r(y)))\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/smallsuite-false/AbsentBR.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n        \t\"measurement_name\":\"y\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AlwaysAQ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(  q(y) -> always[0,10]((p(x)))  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/smallsuite-false/AlwaysAQ.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"q\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AlwaysBQR",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always( (  q(x) and !r(z) and once(r(z)) ) -> ( p(y) since[3,10] r(z) )  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/smallsuite-false/AlwaysBQR.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"q\"\n        },\n        {\n        \t\"measurement_name\":\"z\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AlwaysBR",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(  ( once[0,10]( r(y) ) ) -> ( (p(x) ) since r(y) )  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/smallsuite-false/AlwaysBR.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n        \t\"measurement_name\":\"y\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RecurBQR",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always((q(x) && !r(z) && once r(z)) -> ((once[0,10](p(y) or r(z))) since r(z)))\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"q\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/smallsuite-false/RecurBQR.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"q\"\n        },\n        {\n        \t\"measurement_name\":\"y\",\n        \t\"measurement_column\":\"p\"\n        },\n        {\n        \t\"measurement_name\":\"z\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RecurGLB",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(once[0,10](p(x)))\",\n    \"specification_type\": \"mtl\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/smallsuite-false/RecurGLB.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RespondBQR",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always((q(y) && !r(x) && once r(x)) -> ( p(w) -> ( (not r(x)) since[3,10] ((not r(x)) and s(z))  ) since r(x))  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [{\n\t\t\"predicate_name\":\"r\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"p\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"q\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"s\",\n\t\t\"predicate_logic\":\"boolean\"\n\t}],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/smallsuite-false/RespondBQR.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"r\"\n        },\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"q\"\n        },\n        {\n            \"measurement_name\": \"z\",\n            \"measurement_column\": \"s\"\n        },\n        {\n            \"measurement_name\": \"w\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RespondGLB",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(p(x)->once[3,10](s(y)))\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [{\n\t\t\"predicate_name\":\"p\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"s\",\n\t\t\"predicate_logic\":\"boolean\"\n\t}],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/smallsuite-false/RespondGLB.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"s\"\n        },\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

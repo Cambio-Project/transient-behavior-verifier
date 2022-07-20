@@ -1,0 +1,1031 @@
+{
+	"variables": [],
+	"info": {
+		"name": "future-largesuite-true-evaluation",
+		"_postman_id": "2938e897-a0e3-6d26-f248-3ac3b7d9190f",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "AbsentAQ10",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(  q(y) -> always[0,10](not(p(x)))  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AbsentAQ/AbsentAQ10.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"q\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AbsentAQ100",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(  q(y) -> always[0,100](not(p(x)))  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AbsentAQ/AbsentAQ100.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"q\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AbsentAQ1000",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(  q(y) -> always[0,1000](not(p(x)))  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AbsentAQ/AbsentAQ1000.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"q\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AbsentBQR10",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always( (  q(x) and !r(z) and once(r(z)) ) -> ( (not p(y)) since[3,10] r(z) )  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AbsentBQR/AbsentBQR10.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"q\"\n        },\n        {\n        \t\"measurement_name\":\"z\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AbsentBQR100",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always( (  q(x) and !r(z) and once(r(z)) ) -> ( (not p(y)) since[30,100] r(z) )  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AbsentBQR/AbsentBQR100.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"q\"\n        },\n        {\n        \t\"measurement_name\":\"z\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AbsentBQR1000",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always( (  q(x) and !r(z) and once(r(z)) ) -> ( (not p(y)) since[300,1000] r(z) )  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AbsentBQR/AbsentBQR1000.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"q\"\n        },\n        {\n        \t\"measurement_name\":\"z\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AbsentBR10",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always((once[0,10](r(y))) -> ((not p(x)) since r(y)))\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AbsentBR/AbsentBR10.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n        \t\"measurement_name\":\"y\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AbsentBR100",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always((once[0,100](r(y))) -> ((not p(x)) since r(y)))\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AbsentBR/AbsentBR100.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n        \t\"measurement_name\":\"y\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AbsentBR1000",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always((once[0,1000](r(y))) -> ((not p(x)) since r(y)))\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AbsentBR/AbsentBR1000.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n        \t\"measurement_name\":\"y\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AlwaysAQ10",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(  q(y) -> always[0,10]((p(x)))  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AlwaysAQ/AlwaysAQ10.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"q\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AlwaysAQ100",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(  q(y) -> always[0,100]((p(x)))  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AlwaysAQ/AlwaysAQ100.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"q\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AlwaysAQ1000",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(  q(y) -> always[0,1000]((p(x)))  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AlwaysAQ/AlwaysAQ1000.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"q\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AlwaysBQR10",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always( (  q(x) and !r(z) and once(r(z)) ) -> ( p(y) since[3,10] r(z) )  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AlwaysBQR/AlwaysBQR10.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"q\"\n        },\n        {\n        \t\"measurement_name\":\"z\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AlwaysBQR100",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always( (  q(x) and !r(z) and once(r(z)) ) -> ( p(y) since[30,100] r(z) )  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AlwaysBQR/AlwaysBQR100.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"q\"\n        },\n        {\n        \t\"measurement_name\":\"z\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AlwaysBQR1000",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always( (  q(x) and !r(z) and once(r(z)) ) -> ( p(y) since[300,1000] r(z) )  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n            \"predicate_name\": \"q\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AlwaysBQR/AlwaysBQR1000.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"p\"\n        },\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"q\"\n        },\n        {\n        \t\"measurement_name\":\"z\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AlwaysBR10",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(  ( once[0,10]( r(y) ) ) -> ( (p(x) ) since r(y) )  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AlwaysBR/AlwaysBR10.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n        \t\"measurement_name\":\"y\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AlwaysBR100",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(  ( once[0,100]( r(y) ) ) -> ( (p(x) ) since r(y) )  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AlwaysBR/AlwaysBR100.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n        \t\"measurement_name\":\"y\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "AlwaysBR1000",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(  ( once[0,1000]( r(y) ) ) -> ( (p(x) ) since r(y) )  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/AlwaysBR/AlwaysBR1000.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        },\n        {\n        \t\"measurement_name\":\"y\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RecurBQR10",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always((q(x) && !r(z) && once r(z)) -> ((once[0,10](p(y) or r(z))) since r(z)))\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"q\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/RecurBQR/RecurBQR10.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"q\"\n        },\n        {\n        \t\"measurement_name\":\"y\",\n        \t\"measurement_column\":\"p\"\n        },\n        {\n        \t\"measurement_name\":\"z\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RecurBQR100",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always((q(x) && !r(z) && once r(z)) -> ((once[0,100](p(y) or r(z))) since r(z)))\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"q\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/RecurBQR/RecurBQR100.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"q\"\n        },\n        {\n        \t\"measurement_name\":\"y\",\n        \t\"measurement_column\":\"p\"\n        },\n        {\n        \t\"measurement_name\":\"z\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RecurBQR1000",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always((q(x) && !r(z) && once r(z)) -> ((once[0,1000](p(y) or r(z))) since r(z)))\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"r\",\n        \t\"predicate_logic\":\"boolean\"\n        },\n        {\n        \t\"predicate_name\":\"q\",\n        \t\"predicate_logic\":\"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/RecurBQR/RecurBQR1000.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"q\"\n        },\n        {\n        \t\"measurement_name\":\"y\",\n        \t\"measurement_column\":\"p\"\n        },\n        {\n        \t\"measurement_name\":\"z\",\n        \t\"measurement_column\":\"r\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RecurGLB10",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(once[0,10](p(x)))\",\n    \"specification_type\": \"mtl\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/RecurGLB/RecurGLB10.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RecurGLB100",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(once[0,100](p(x)))\",\n    \"specification_type\": \"mtl\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/RecurGLB/RecurGLB100.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RecurGLB1000",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(once[0,1000](p(x)))\",\n    \"specification_type\": \"mtl\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/RecurGLB/RecurGLB1000.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RespondBQR10",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always((q(y) && !r(x) && once r(x)) -> ( p(w) -> ( (not r(x)) since[3,10] ((not r(x)) and s(z))  ) since r(x))  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [{\n\t\t\"predicate_name\":\"r\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"p\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"q\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"s\",\n\t\t\"predicate_logic\":\"boolean\"\n\t}],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/RespondBQR/RespondBQR10.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"r\"\n        },\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"q\"\n        },\n        {\n            \"measurement_name\": \"z\",\n            \"measurement_column\": \"s\"\n        },\n        {\n            \"measurement_name\": \"w\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RespondBQR100",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always((q(y) && !r(x) && once r(x)) -> ( p(w) -> ( (not r(x)) since[30,100] ((not r(x)) and s(z))  ) since r(x))  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [{\n\t\t\"predicate_name\":\"r\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"p\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"q\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"s\",\n\t\t\"predicate_logic\":\"boolean\"\n\t}],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/RespondBQR/RespondBQR100.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"r\"\n        },\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"q\"\n        },\n        {\n            \"measurement_name\": \"z\",\n            \"measurement_column\": \"s\"\n        },\n        {\n            \"measurement_name\": \"w\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RespondBQR1000",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always((q(y) && !r(x) && once r(x)) -> ( p(w) -> ( (not r(x)) since[300,1000] ((not r(x)) and s(z))  ) since r(x))  )\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [{\n\t\t\"predicate_name\":\"r\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"p\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"q\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"s\",\n\t\t\"predicate_logic\":\"boolean\"\n\t}],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/RespondBQR/RespondBQR1000.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"r\"\n        },\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"q\"\n        },\n        {\n            \"measurement_name\": \"z\",\n            \"measurement_column\": \"s\"\n        },\n        {\n            \"measurement_name\": \"w\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RespondGLB10",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(p(x)->once[3,10](s(y)))\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [{\n\t\t\"predicate_name\":\"p\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"s\",\n\t\t\"predicate_logic\":\"boolean\"\n\t}],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/RespondGLB/RespondGLB10.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"s\"\n        },\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RespondGLB100",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(p(x)->once[30,100](s(y)))\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [{\n\t\t\"predicate_name\":\"p\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"s\",\n\t\t\"predicate_logic\":\"boolean\"\n\t}],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/RespondGLB/RespondGLB100.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"s\"\n        },\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "RespondGLB1000",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Result is True\"] = jsonData.result === \"True\";",
+							"console.log(jsonData)",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "localhost:5000/monitor",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"specification\": \"always(p(x)->once[300,1000](s(y)))\",\n    \"specification_type\": \"mtl\",\n    \"convert-to-past\":\"true\",\n    \"predicates_info\": [{\n\t\t\"predicate_name\":\"p\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"s\",\n\t\t\"predicate_logic\":\"boolean\"\n\t}],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/RespondGLB/RespondGLB1000.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"s\"\n        },\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
