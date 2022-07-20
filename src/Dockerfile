@@ -16,6 +16,8 @@ RUN pip3 install bs4
 
 COPY . /app
 
+RUN sed -i 's/min_valdInf/min_val/g' ../usr/local/lib/python3.8/dist-packages/monitors/mtl.py
+
 ENTRYPOINT [ "python3" ]
 
 CMD ["main.py" ]
