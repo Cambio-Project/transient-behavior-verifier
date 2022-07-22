@@ -1021,7 +1021,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"specification\": \"always(p(x)->once[300,1000](s(y)))\",\n    \"specification_type\": \"mtl\",\n    \"convert-to-past\":\"true\",\n    \"predicates_info\": [{\n\t\t\"predicate_name\":\"p\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"s\",\n\t\t\"predicate_logic\":\"boolean\"\n\t}],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/RespondGLB/RespondGLB1000.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"s\"\n        },\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
+					"raw": "{\n    \"specification\": \"always(p(x)->once[300,1000](s(y)))\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [{\n\t\t\"predicate_name\":\"p\",\n\t\t\"predicate_logic\":\"boolean\"\n\t},{\n\t\t\"predicate_name\":\"s\",\n\t\t\"predicate_logic\":\"boolean\"\n\t}],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/largesuite/RespondGLB/RespondGLB1000.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"y\",\n            \"measurement_column\": \"s\"\n        },\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
 				},
 				"description": ""
 			},

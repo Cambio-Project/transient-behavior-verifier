@@ -16,7 +16,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"tests[\"Result is False\"] = jsonData.result === \"False\";",
 							"console.log(jsonData)",
 							""
 						]
@@ -50,7 +50,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"tests[\"Result is False\"] = jsonData.result === \"False\";",
 							"console.log(jsonData)",
 							""
 						]
@@ -84,7 +84,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"tests[\"Result is False\"] = jsonData.result === \"False\";",
 							"console.log(jsonData)",
 							""
 						]
@@ -118,7 +118,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"tests[\"Result is False\"] = jsonData.result === \"False\";",
 							"console.log(jsonData)",
 							""
 						]
@@ -152,7 +152,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"tests[\"Result is False\"] = jsonData.result === \"False\";",
 							"console.log(jsonData)",
 							""
 						]
@@ -186,7 +186,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"tests[\"Result is False\"] = jsonData.result === \"False\";",
 							"console.log(jsonData)",
 							""
 						]
@@ -220,7 +220,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"tests[\"Result is False\"] = jsonData.result === \"False\";",
 							"console.log(jsonData)",
 							""
 						]
@@ -254,7 +254,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"tests[\"Result is False\"] = jsonData.result === \"False\";",
 							"console.log(jsonData)",
 							""
 						]
@@ -273,7 +273,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"specification\": \"always(once[0,10](p(x)))\",\n    \"specification_type\": \"mtl\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/smallsuite-false/RecurGLB.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
+					"raw": "{\n    \"specification\": \"always(once[0,10](p(x)))\",\n    \"specification_type\": \"mtl\",\n    \"future-mtl\":\"true\",\n    \"predicates_info\": [\n        {\n            \"predicate_name\": \"p\",\n            \"predicate_logic\": \"boolean\"\n        }\n    ],\n    \"measurement_source\": \"remote-csv\",\n    \"remote-csv-address\":\"http://localhost:5000/static/evaluation/smallsuite-false/RecurGLB.csv\",\n    \"measurement_points\": [\n        {\n            \"measurement_name\": \"x\",\n            \"measurement_column\": \"p\"\n        }\n    ]\n}"
 				},
 				"description": ""
 			},
@@ -288,7 +288,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"tests[\"Result is False\"] = jsonData.result === \"False\";",
 							"console.log(jsonData)",
 							""
 						]
@@ -322,7 +322,7 @@
 						"type": "text/javascript",
 						"exec": [
 							"var jsonData = JSON.parse(responseBody);",
-							"tests[\"Result is True\"] = jsonData.result === \"False\";",
+							"tests[\"Result is False\"] = jsonData.result === \"False\";",
 							"console.log(jsonData)",
 							""
 						]
