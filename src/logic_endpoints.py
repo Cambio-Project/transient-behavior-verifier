@@ -25,6 +25,7 @@ def monitor():
         formula_info = json.loads(request.form['formula_json'])
 
     check_json_schema(formula_info)
+    print("----------")
     print("Received new transient behavior specification.")
     formula, params_string = FormulaHandler().handle_formula(
         formula_info)
@@ -65,8 +66,11 @@ def start_evaluation(formula, params_string, points_info, measurement_source, fo
     result_dict = {}
     result_dict['result'] = str(mtl_eval_output[-1])
     result_dict['intervals'] = intervals
+    if ('future-mtl' in formula_info):
+        result_dict['reversed-results'] = str(True)
     print("Evaluation result:", result_dict['result'])
-
+    print("Evaluation intervals:", result_dict['intervals'])
+    print("----------")
     # Make CTK fail on purpose when probe in method:
     # if(str(mtl_eval_output[-1])=="False"):
     #     sleep(5)

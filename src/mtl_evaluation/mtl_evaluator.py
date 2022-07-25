@@ -27,8 +27,15 @@ class MTLEvaluator():
                     predicate_info[0]+"' is set to " + \
                     ''.join(predicate_values)+'; '
 
+        # for debugging purposes you can use the additional print_source_code parameter
+        # to print the code of the sequential network and the update rules
+        # my_mtl_monitor = eval(
+        #     "mtl.monitor("+'"'+formula+"\","+params_string+",print_source_code=True)")
+
         my_mtl_monitor = eval(
-            "mtl.monitor("+'"'+formula+"\","+params_string+",print_source_code=True)")
+            "mtl.monitor("+'"'+formula+"\","+params_string+")")
+
+        print("Evaluation results at each time point:")
 
         predicate_input_values = []
         for j in range(len(data_array[0])):
