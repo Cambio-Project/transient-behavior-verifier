@@ -7,6 +7,7 @@
 3. [How to run the correctness evaluation](#How-to-run-the-correctness-evaluation)
 4. [How to extend the predicate functions](#How-to-extend-the-predicate-functions)
 5. [REST API](##REST-API)
+6. [JSON specification description](#json-specification-description)
 
 
 ## Architecture
@@ -113,7 +114,7 @@ The prototype implements a REST API. All available endpoints are listed below to
 	
 * ```measurement_source``` A required text field defining the source of the measurement data, currently supporting ```influx``` for InfluxDB, ```prometheus``` for Prometheus,```csv``` for local CSV files, and ```remote-csv``` for remote \gls{csv} files, for example hosted on a web server.
 	
-* ```remote-csv-address``` Required when ```measurement_source``` is set to ```remote-csv```. This field contains the URL to the \gls{csv} table. 
+* ```remote-csv-address``` Required when ```measurement_source``` is set to ```remote-csv```. This field contains the URL to the CSV table. 
 	
 * ```measurement_points``` A required array containing information regarding the measurement data. 
 	
