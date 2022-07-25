@@ -95,3 +95,32 @@ The prototype implements a REST API. All available endpoints are listed below to
 | ```/create_exp```     | ```GET```   |  | Returns the page where a transient behavior specification can be inserted into a CTK chaos experiment.     |
 | ```/verify_behav```     | ```GET```   |  | Returns the page where a transient behavior verification can be carried out in a stand-alone manner.     |
 
+
+## JSON specification description:
+
+* ```behavior_description``` An optional text field that allows the specification of a text description of the transient behavior. 
+* ```specification``` A required text field containing the formal description of the behavior, which is either an MTL formula, where the symbols for the temporal operators are replaced with their names or a textual PSP definition created using the PSP Wizard tool. 
+* ```specification_type``` A required text field specifying the type of the formal behavior specification, can be either ```mtl``` or ```psp```.
+	
+* ```future-mtl``` An optional field allowing to specify that a future-MTL formula has been defined in the ```specification``` field. By default, the prototype assumes that the specified behaviors are in past-MTL. Additionally, the field should only be used when ```specification_type``` is set to ```mtl```. 
+	
+* ```predicates_info``` A required array containing the information regarding the logical predicates in the formal behavior specification. The array contains objects of the following format: 
+	* ```predicate_description``` An optional text field that allows the specification of a text description of the logical predicate.
+	*    ```predicate_name``` A required text field containing the predicate name as it occurs in the formal specification above.
+	*    ```predicate_logic``` A required text field containing the name of a logical function from a predefined selection of  Boolean operations provided by the prototype.
+	*    ```predicate_comparison_value``` A text field containing a value used as the comparison value for the respective logical operation. Not all functions require the inclusion of this field, e.g., the ```boolean``` function and the trend functions. 
+
+	
+* ```measurement_source``` A required text field defining the source of the measurement data, currently supporting ```influx``` for InfluxDB, ```prometheus``` for Prometheus,```csv``` for local CSV files, and ```remote-csv``` for remote \gls{csv} files, for example hosted on a web server.
+	
+* ```remote-csv-address``` Required when ```measurement_source``` is set to ```remote-csv```. This field contains the URL to the \gls{csv} table. 
+	
+* ```measurement_points``` A required array containing information regarding the measurement data. 
+	
+	* ```measurement_name``` A required text field containing the name of the measurement as it occurs in the behavior specification.
+	* ```measurement_query``` A text field specifying the query that will be used to retrieve the data. Only required when ```measurement_source``` is specified as ```influx``` or ```prometheus```.
+	* ```measurement_column``` A text field specifying the column from which the measurement data will be retrieved. Only required when ```measurement_source``` is set to ```csv``` or ```remote-csv```. 
+	*    ```start_time``` A text field for specifying the start time of the query interval. Only required when ```measurement_source``` is set to ```prometheus```.
+	*    ```end_time``` A text field for specifying the end time of the query interval. Only required when ```measurement_source``` is set to ```prometheus```.
+	*    ```steps``` A text field for specifying the steps of the query interval. Only required when ```measurement_source``` is set to ```prometheus```.
+
