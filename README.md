@@ -1,4 +1,6 @@
-### [Link to the thesis and the supplementary material](10.5281/zenodo.6845089)
+### [Link to the thesis and the supplementary material](https://doi.org/10.5281/zenodo.6845089)
+
+DOI: 10.5281/zenodo.6845089
 
 # Outline
 
