@@ -1,4 +1,4 @@
-### [Link to the thesis and the supplementary material]()
+### [Link to the thesis and the supplementary material](10.5281/zenodo.6845089)
 
 # Outline
 
