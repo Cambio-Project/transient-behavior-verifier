@@ -114,7 +114,7 @@ The prototype implements a REST API. All available endpoints are listed below to
 	*    ```predicate_comparison_value``` A text field containing a value used as the comparison value for the respective logical operation. Not all functions require the inclusion of this field, e.g., the ```boolean``` function and the trend functions. 
 
 	
-* ```measurement_source``` A required text field defining the source of the measurement data, currently supporting ```influx``` for InfluxDB, ```prometheus``` for Prometheus,```csv``` for local CSV files, and ```remote-csv``` for remote \gls{csv} files, for example hosted on a web server.
+* ```measurement_source``` A required text field defining the source of the measurement data, currently supporting ```influx``` for InfluxDB, ```prometheus``` for Prometheus,```csv``` for local CSV files, and ```remote-csv``` for remote csv files, for example hosted on a web server.
 	
 * ```remote-csv-address``` Required when ```measurement_source``` is set to ```remote-csv```. This field contains the URL to the CSV table. 
 	
