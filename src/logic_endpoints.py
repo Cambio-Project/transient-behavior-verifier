@@ -42,7 +42,7 @@ def start_evaluation(formula, params_string, points_info, measurement_source, fo
         points_names, multi_dim_array = PrometheusDataRetriever().retrieve_data(points_info)
     elif(measurement_source == "csv"):
         f = request.files['file']
-        df = pd.read_csv(f.stream, header=0, sep=',')
+        df = pd.read_csv(f.stream, header=0, sep=',|;', engine='python')
         multi_dim_array, column_names, points_names = CSVDataRetriever().retrieve_data(df,
                                                                                        points_info)
     elif(measurement_source == "remote-csv"):
