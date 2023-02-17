@@ -24,6 +24,22 @@ The REST API is implemented in the ```gui_endpoints.py``` and ```logic_endpoints
 
 The GUI of the tool consists of several HTML pages built by using Bootstrap and JavaScript. 
 
+The page for creating a PSP specification:
+![](/figures/create-spec-psp.png)
+
+The page for creating a MTL specification:
+![](/figures/create-spec-mtl.png)
+
+The page for creating a CTK chaos experiment specification:
+![](/figures/create-exp.png)
+
+The page for initiating the stand-alone verification:
+![](/figures/verify-behav.png)
+
+The page for investigating the verification result:
+![](/figures/results-page.png)
+
+
 #### Parser
 
 The parser component consists of the files in the ```src/handlers/``` folder. This component is responsible for the mapping of PSPs to MTL formula and for the parsing and preparing of the formulas and the predicates. 
