@@ -1,4 +1,6 @@
 from audioop import mul
+from typing import Tuple
+
 import jsonschema
 from jsonschema import validate
 import json
@@ -9,6 +11,7 @@ from data_retrieval.influx_data_retriever import InfluxDataRetriever
 from data_retrieval.prometheus_data_retriever import PrometheusDataRetriever
 from handlers.formula_handler import FormulaHandler
 from mtl_evaluation.mtl_evaluator import MTLEvaluator
+from mtl_evaluation.mtl_refinement import MTLRefiner
 import handlers.predicate_functions as predicate_functions
 import pandas as pd
 import configparser
@@ -24,76 +27,120 @@ def after_request(response):
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
     return response
 
+
+@logic_api.route('/refine_timebound', methods=['POST'])
+def refine():
+    """
+    Refines the timebound of the transient behavior specification.
+
+    :return: Lower and upper bounds of when the transient behavior specification is satisfied.
+    """
+    formula_info = _formula_info_from_request()
+    points_names, multi_dim_array = _data_from_formula_info(formula_info)
+    refiner = MTLRefiner(formula_info, points_names, multi_dim_array)
+    result = refiner.refine_timebound()
+    return json.dumps(result)
+
+
 @logic_api.route('/monitor', methods=['POST'])
 def monitor():
-    if(request.headers.get('Content-Type') == 'application/json'):
-        formula_info = request.get_json()
-    else:
-        formula_info = json.loads(request.form['formula_json'])
-
-    check_json_schema(formula_info)
-    print("----------")
-    print("Received new transient behavior specification.")
-    formula, params_string = FormulaHandler().handle_formula(
-        formula_info)
+    formula_info = _formula_info_from_request()
+    formula, params_string = FormulaHandler().handle_formula(formula_info)
     mtl_result = start_evaluation(
-        formula, params_string, formula_info['measurement_points'], formula_info['measurement_source'], formula_info)
+        formula=formula,
+        params_string=params_string,
+        formula_info=formula_info
+    )
     return mtl_result
 
 
-def start_evaluation(formula, params_string, points_info, measurement_source, formula_info):
-    if(measurement_source == "influx"):
-        points_names, multi_dim_array = InfluxDataRetriever().retrieve_data(points_info)
-    elif(measurement_source == "prometheus"):
-        points_names, multi_dim_array = PrometheusDataRetriever().retrieve_data(points_info)
-    elif(measurement_source == "csv"):
+def _formula_info_from_request() -> dict:
+    """
+    Extracts the formula and parameters from the request.
+
+    :return: The formula, the parameters, and the formula info.
+    """
+    if request.headers.get('Content-Type') == 'application/json':
+        formula_info = request.get_json()
+    else:
+        formula_info = json.loads(request.form['formula_json'])
+    check_json_schema(formula_info)
+    return formula_info
+
+
+def _data_from_formula_info(formula_info):
+    source = formula_info["measurement_source"]
+
+    if source == "influx":
+        points_names, multi_dim_array = InfluxDataRetriever().retrieve_data(
+            formula_info["measurement_points"]
+        )
+
+    elif source == "prometheus":
+        points_names, multi_dim_array = PrometheusDataRetriever().retrieve_data(
+            formula_info["measurement_points"]
+        )
+
+    elif source == "csv":
         f = request.files['file']
         #df = pd.read_csv(f.stream, header=0, sep=',')
         df = pd.read_csv(f.stream, header=0, sep=',|;', engine='python')
-        multi_dim_array, column_names, points_names = CSVDataRetriever().retrieve_data(df,
-                                                                                       points_info)
-    elif(measurement_source == "remote-csv"):
-        if(formula_info["remote-csv-address"]):
-            df = pd.read_csv(formula_info['remote-csv-address'])
-            multi_dim_array, column_names, points_names = CSVDataRetriever().retrieve_data(df,
-                                                                                           points_info)
+        multi_dim_array, column_names, points_names = CSVDataRetriever().retrieve_data(
+            df, formula_info["measurement_points"]
+        )
 
-    # if the formula is in future-MTL the trace is reversed and the results also
-    if('future-mtl' in formula_info):
-        reverse_array = multi_dim_array
-        for array in reverse_array:
-            array = array.reverse()
-        mtl_eval_output, intervals = MTLEvaluator().evaluate(
-            formula, params_string, points_names, reverse_array, reverse=True)
+    elif source == "remote-csv":
+        if not formula_info["remote-csv-address"]:
+            raise ValueError("Remote CSV address not provided")
+        df = pd.read_csv(formula_info['remote-csv-address'])
+        multi_dim_array, column_names, points_names = CSVDataRetriever().retrieve_data(
+            df, formula_info['measurement_points']
+        )
 
     else:
-        mtl_eval_output, intervals = MTLEvaluator().evaluate(
-            formula, params_string, points_names, multi_dim_array, reverse=False)
+        raise ValueError("Invalid measurement source")
 
-    result_dict = {}
-    result_dict['result'] = str(mtl_eval_output[-1])
-    result_dict['intervals'] = intervals
-    if ('future-mtl' in formula_info):
-        result_dict['reversed-results'] = str(True)
-    #print("Evaluation result:", result_dict['result'])
-    #print("Evaluation intervals:", result_dict['intervals'])
-    #print("----------")
+    return points_names, multi_dim_array
+
+
+def start_evaluation(formula, params_string, formula_info):
+
+    points_names, multi_dim_array = _data_from_formula_info(formula_info)
+
+    # if the formula is in future-MTL the trace is reversed and the results also
+    reverse = False
+    if 'future-mtl' in formula_info:
+        for array in multi_dim_array:
+            array.reverse()
+        reverse = True
+
+    mtl_eval_output, intervals = MTLEvaluator().evaluate(
+        formula, params_string, points_names, multi_dim_array, reverse=reverse)
+
+    result_dict = {
+        'result': str(mtl_eval_output[-1]),
+        'intervals': intervals
+    }
+
+    if 'future-mtl' in formula_info:
+        result_dict['reversed-results'] = "True"
+
     # Make CTK fail on purpose when probe in method:
     # if(str(mtl_eval_output[-1])=="False"):
     #     sleep(5)
-    # print("intervals", intervals)
+    #
     return json.dumps(result_dict)
 
 
 def check_json_schema(formula_info):
-    schema = None
     with open('behavior_json_schema.json', 'r') as file:
         schema = json.load(file)
     try:
         validate(instance=formula_info, schema=schema)
-    except jsonschema.exceptions.ValidationError as err:
+    except jsonschema.exceptions.ValidationError:
         raise Exception(
-            "JSON Body is invalid! Some fields are incorrect or missing!")
+            "JSON Body is invalid! Some fields are incorrect or missing!"
+        )
 
 
 @logic_api.route('/insert_spec_into_exp', methods=['POST'])
