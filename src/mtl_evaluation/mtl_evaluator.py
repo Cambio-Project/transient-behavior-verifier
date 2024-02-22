@@ -59,8 +59,8 @@ class MTLEvaluator():
 
             eval_string = eval_string+")"
             output = eval(eval_string)
-            print(my_mtl_monitor.time, output,
-                  my_mtl_monitor.states, predicate_input_values[-1])
+            #print(my_mtl_monitor.time, output,
+            #      my_mtl_monitor.states, predicate_input_values[-1])
             mtl_eval_output.append(output)
 
             with open("result_log.txt", "a") as external_file:
