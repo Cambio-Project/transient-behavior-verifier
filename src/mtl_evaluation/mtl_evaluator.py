@@ -13,8 +13,8 @@ class MTLEvaluator():
     def evaluate(self, formula, params_string, points_names, data_array, reverse=False):
 
         # creates empty result log file
-        with open("result_log.txt", 'w') as f:
-            pass
+        # with open("result_log.txt", 'w') as f:
+        #     pass
 
         mtl_eval_output = []
         predicate_comparison_values = params_string.split(',')
@@ -35,7 +35,6 @@ class MTLEvaluator():
         my_mtl_monitor = eval(
             "mtl.monitor("+'"'+formula+"\","+params_string+")")
 
-        print("Evaluation results at each time point:")
 
         predicate_input_values = []
         for j in range(len(data_array[0])):
@@ -63,10 +62,10 @@ class MTLEvaluator():
             #      my_mtl_monitor.states, predicate_input_values[-1])
             mtl_eval_output.append(output)
 
-            with open("result_log.txt", "a") as external_file:
-                add_text = my_mtl_monitor.time, output, my_mtl_monitor.states, predicate_input_values[-1]
-                print(add_text, file=external_file)
-                external_file.close()
+            # with open("result_log.txt", "a") as external_file:
+            #     add_text = my_mtl_monitor.time, output, my_mtl_monitor.states, predicate_input_values[-1]
+            #     print(add_text, file=external_file)
+            #     external_file.close()
 
         intervals = MTLPlotter(mtl_eval_output, points_names,
                                data_array, predicate_input_values, reverse).create_plot()
