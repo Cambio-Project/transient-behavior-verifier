@@ -13,12 +13,19 @@ import handlers.predicate_functions as predicate_functions
 import pandas as pd
 import configparser
 
+
 logic_api = Blueprint('logic_api', __name__)
 
 
+@logic_api.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    return response
+
 @logic_api.route('/monitor', methods=['POST'])
 def monitor():
-
     if(request.headers.get('Content-Type') == 'application/json'):
         formula_info = request.get_json()
     else:
@@ -35,14 +42,14 @@ def monitor():
 
 
 def start_evaluation(formula, params_string, points_info, measurement_source, formula_info):
-
     if(measurement_source == "influx"):
         points_names, multi_dim_array = InfluxDataRetriever().retrieve_data(points_info)
     elif(measurement_source == "prometheus"):
         points_names, multi_dim_array = PrometheusDataRetriever().retrieve_data(points_info)
     elif(measurement_source == "csv"):
         f = request.files['file']
-        df = pd.read_csv(f.stream, header=0, sep=',')
+        #df = pd.read_csv(f.stream, header=0, sep=',')
+        df = pd.read_csv(f.stream, header=0, sep=',|;', engine='python')
         multi_dim_array, column_names, points_names = CSVDataRetriever().retrieve_data(df,
                                                                                        points_info)
     elif(measurement_source == "remote-csv"):
@@ -68,9 +75,9 @@ def start_evaluation(formula, params_string, points_info, measurement_source, fo
     result_dict['intervals'] = intervals
     if ('future-mtl' in formula_info):
         result_dict['reversed-results'] = str(True)
-    print("Evaluation result:", result_dict['result'])
-    print("Evaluation intervals:", result_dict['intervals'])
-    print("----------")
+    #print("Evaluation result:", result_dict['result'])
+    #print("Evaluation intervals:", result_dict['intervals'])
+    #print("----------")
     # Make CTK fail on purpose when probe in method:
     # if(str(mtl_eval_output[-1])=="False"):
     #     sleep(5)
