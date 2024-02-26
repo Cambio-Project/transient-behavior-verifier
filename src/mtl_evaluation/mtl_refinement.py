@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Tuple, List, Dict
+from typing import Tuple, List, Dict, Optional
 from src.mtl_evaluation.mtl_evaluator import MTLEvaluator
 from src.handlers.formula_handler import FormulaHandler
 from src.handlers.psp_mapper import PSPMapper
@@ -8,8 +8,14 @@ from src.handlers.psp_mapper import PSPMapper
 @dataclass
 class Interval:
     __slots__ = ['lower', 'upper']
-    lower: int
-    upper: int
+    lower: Optional[int]
+    upper: Optional[int]
+
+    def base1_index(self):
+        return Interval(
+            lower=self.lower if self.lower is not None else None,
+            upper=self.upper if self.upper is not None else None
+        )
 
 
 class MTLRefiner:
@@ -29,7 +35,10 @@ class MTLRefiner:
         self._data: List = data
         self._max_index: int = len(self._data[0]) - 1
         self._points_names: List[str] = points_names
-        self._refined_bounds: Interval = Interval(lower=-1, upper=-1)
+        if self._is_two_sided_search:
+            self._refined_bounds: Interval = Interval(lower=-1, upper=-1)
+        else:
+            self._refined_bounds: Interval = Interval(lower=None, upper=-1)
 
     def refine_timebound(self) -> Dict[str, str]:
         """
@@ -38,11 +47,11 @@ class MTLRefiner:
         :return: Lower and upper bounds of when the transient behavior specification is satisfied.
         """
         if not (self._mapper.get_lower_bound() or self._mapper.get_upper_bound()):
-            return {'result': 'false', 'intervals': [], 'lower_bound': -1, 'upper_bound': -1}
+            return {'result': 'false', 'intervals': [], 'lower_bound': None, 'upper_bound': None}
 
         current_bounds = Interval(
             lower=0,
-            upper=self._max_index if self._mapper.has_lower_bound() else 0
+            upper=self._max_index if self._is_two_sided_search else 0
         )
 
         success = False
@@ -62,12 +71,13 @@ class MTLRefiner:
             is_satisfied = False
             interval = []
 
-        return {
+        result = {
             'result': str(is_satisfied),
             'intervals': interval,
-            'lower_bound': self._refined_bounds.lower,
-            'upper_bound': self._refined_bounds.upper,
+            'lower_bound': self._refined_bounds.base1_index().lower,
+            'upper_bound': self._refined_bounds.base1_index().upper,
         }
+        return result
 
     def _refine_bounds_two_sided(self, is_satisfied: bool, current_bounds: Interval):
         """
@@ -106,8 +116,7 @@ class MTLRefiner:
         """
         if self._refined_bounds.upper < 0:
             if not is_satisfied:
-                current_bounds.upper -= 1
-                self._refined_bounds.upper = current_bounds.upper
+                self._refined_bounds.upper = current_bounds.upper - 1
                 return True
             elif current_bounds.upper == self._max_index:
                 self._refined_bounds.upper = self._max_index
