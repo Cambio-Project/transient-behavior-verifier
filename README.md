@@ -100,19 +100,20 @@ In order to add new fuctions, simply define define additional functions that ret
 The prototype implements a REST API. All available endpoints are listed below together with information about them:
 
 
-| URL | Method | Body | Info |
-| -------- | -------- | -------- | -------- |
-| ```/monitor```     | ```POST```   | A JSON object containg a transient behavior specification. | Initiates the evaluation of a transient behavior specificaiton.     |
-| ```/insert_spec_into_exp```     | ```POST```  |  ```multipart/form-data``` - containing a transient behavior specification and a JSON file containig a chaos experiment.  | Inserts a transient behavior specification into a CTK chaos experiment and returns it as a downloadable file.     |
-| ```/save_spec```     | ```POST```   | ```form-data``` containing a transient behavior specification. | Saves a transient behavior specification in a JSON file.     |
-| ```/result```     | ```GET, POST```  |   | Runs a transient behavior verification by calling the ```/monitor``` endpoint and returns the page visualizing the results.     |
-| ```/```     | ```GET```  |   | Returns the welcoming page.     |
-| ```/index```     | ```GET```  |   | Also returns the welcoming page.     |
-| ```/create_spec_mtl```     | ```GET```  |   | Returns the page for creating a transient behavior specification using an MTL formula.     |
-| ```/create_spec_psp```     | ```GET```   |  | Returns the page for creating a transient behavior specification using a PSP definition.     |
-| ```/spec_selector```     | ```GET```   |  | Returns the page in which the user can select the way to define the behavior specification, i.e. MTL or PSP.     |
-| ```/create_exp```     | ```GET```   |  | Returns the page where a transient behavior specification can be inserted into a CTK chaos experiment.     |
-| ```/verify_behav```     | ```GET```   |  | Returns the page where a transient behavior verification can be carried out in a stand-alone manner.     |
+| URL                         | Method          | Body                                                                                                                    | Info                                                                                                                        |
+|-----------------------------|-----------------|-------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| ```/monitor```              | ```POST```      | A JSON object containg a transient behavior specification.                                                              | Initiates the evaluation of a transient behavior specificaiton.                                                             |
+| ```/refine_timebound```     | ```POST```      | A JSON object containg a transient behavior specification.<br/>The timebound in the specification is irrelevant.        | Performs binary search to find the a time bound that satisfies the transient behavior specification.                        |
+| ```/insert_spec_into_exp``` | ```POST```      | ```multipart/form-data``` - containing a transient behavior specification and a JSON file containig a chaos experiment. | Inserts a transient behavior specification into a CTK chaos experiment and returns it as a downloadable file.               |
+| ```/save_spec```            | ```POST```      | ```form-data``` containing a transient behavior specification.                                                          | Saves a transient behavior specification in a JSON file.                                                                    |
+| ```/result```               | ```GET, POST``` |                                                                                                                         | Runs a transient behavior verification by calling the ```/monitor``` endpoint and returns the page visualizing the results. |
+| ```/```                     | ```GET```       |                                                                                                                         | Returns the welcoming page.                                                                                                 |
+| ```/index```                | ```GET```       |                                                                                                                         | Also returns the welcoming page.                                                                                            |
+| ```/create_spec_mtl```      | ```GET```       |                                                                                                                         | Returns the page for creating a transient behavior specification using an MTL formula.                                      |
+| ```/create_spec_psp```      | ```GET```       |                                                                                                                         | Returns the page for creating a transient behavior specification using a PSP definition.                                    |
+| ```/spec_selector```        | ```GET```       |                                                                                                                         | Returns the page in which the user can select the way to define the behavior specification, i.e. MTL or PSP.                |
+| ```/create_exp```           | ```GET```       |                                                                                                                         | Returns the page where a transient behavior specification can be inserted into a CTK chaos experiment.                      |
+| ```/verify_behav```         | ```GET```       |                                                                                                                         | Returns the page where a transient behavior verification can be carried out in a stand-alone manner.                        |
 
 
 ## JSON specification description:
