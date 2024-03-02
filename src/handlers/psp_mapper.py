@@ -1,7 +1,7 @@
 import re
 from numpy import mat
 from soupsieve import match
-from src.handlers.psp_patterns import *
+from handlers.psp_patterns import *
 
 
 class PSPMapper:

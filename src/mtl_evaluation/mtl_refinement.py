@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from typing import Tuple, List, Dict, Optional
-from src.mtl_evaluation.mtl_evaluator import MTLEvaluator
-from src.handlers.formula_handler import FormulaHandler
-from src.handlers.psp_mapper import PSPMapper
+from mtl_evaluation.mtl_evaluator import MTLEvaluator
+from handlers.formula_handler import FormulaHandler
+from handlers.psp_mapper import PSPMapper
 
 
 @dataclass
