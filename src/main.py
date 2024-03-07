@@ -32,4 +32,4 @@ if __name__ == '__main__':
     config_obj = configparser.ConfigParser()
     config_obj.read("config.ini")
     host_address = config_obj["main_api"]['api_host']
-    app.run(host=host_address, debug=True)
+    app.run(host=host_address, debug=False)
