@@ -3,7 +3,7 @@ from typing import List, Any
 from functools import reduce
 import pandas as pd
 
-from src.data_retrieval.data_retriever import DataRetriever
+from .data_retriever import DataRetriever
 
 
 class MisimDataRetriever(DataRetriever):
@@ -12,6 +12,7 @@ class MisimDataRetriever(DataRetriever):
     def create_array(sim_path: str, column_names: List[str]):
         files = Path(sim_path).glob('*.csv')
         df_list = [pd.read_csv(file, index_col="SimulationTime") for file in files]
+
         df = reduce(lambda left, right: left.join(right, on="SimulationTime"), df_list)
         df = df[column_names]
         df = df.fillna(method="ffill", axis=0)
