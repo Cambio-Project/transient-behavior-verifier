@@ -28,10 +28,9 @@ class MTLRefiner:
     """
 
     def __init__(self, formula_info: Dict, points_names: List[str], data: List):
-        self._evaluator: MTLEvaluator = MTLEvaluator()
         self._mapper: PSPMapper = PSPMapper.from_psp(formula_info['specification'])
-        self._is_two_sided_search: bool = self._mapper.has_lower_bound() and self._mapper.has_upper_bound()
         self._params_string: str = FormulaHandler().get_params_string(formula_info)
+        self._is_two_sided_search: bool = self._mapper.has_lower_bound() and self._mapper.has_upper_bound()
         self._data: List = data
         self._max_index: int = len(self._data[0]) - 1
         self._points_names: List[str] = points_names
@@ -143,8 +142,6 @@ class MTLRefiner:
 
         :return: Whether the formula is satisfied and the interval.
         """
-        formula = self._mapper.get_formula()
-        mtl_result, interval = self._evaluator.evaluate(
-            formula, self._params_string, self._points_names, self._data
-        )
+        evaluator = MTLEvaluator(self._mapper.get_formula(), self._params_string)
+        mtl_result, interval = evaluator.evaluate(self._points_names, self._data)
         return mtl_result[-1], interval

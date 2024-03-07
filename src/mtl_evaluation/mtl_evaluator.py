@@ -1,78 +1,77 @@
 from monitors import mtl
 from handlers import predicate_functions
 from mtl_evaluation.mtl_plotter import MTLPlotter
-import matplotlib.pyplot as plt
 import numpy as np
 import re
 
 
-class MTLEvaluator():
+class MTLEvaluator:
     """A class responsible for the execution of the formula verification"""
 
-    # executes the verification
-    def evaluate(self, formula, params_string, points_names, data_array, reverse=False):
+    def __init__(self, formula, params_string):
+        self.formula = formula
+        self.params_string = params_string
 
-        # creates empty result log file
-        # with open("result_log.txt", 'w') as f:
-        #     pass
+    def _create_monitor(self):
+        """
+        Create a monitor object with the formula and the parameters.
 
-        mtl_eval_output = []
-        predicate_comparison_values = params_string.split(',')
+        :return: MTL monitor object.
+        """
+        def save_eval(x):
+            """ Evaluate only in predefined context """
+            return eval(x, {}, {"predicate_functions": predicate_functions})
+
+        params_dict = dict(param.split('=') for param in self.params_string.split(','))
+        params_dict = {key: save_eval(value) for key, value in params_dict.items()}
+        return mtl.monitor(self.formula, **params_dict)
+
+    def _create_predicate_string(self) -> str:
+        """
+        Read the params_string and create a string with the predicate names and their values.
+
+        :return: The predicate values string.
+        """
         predicate_values_string = ''
+        predicate_comparison_values = self.params_string.split(',')
         for predicate in predicate_comparison_values:
-            predicate_info = predicate.split('=')
-            if('boolean' not in predicate_info[1] and 'trend' not in predicate_info[1]):
-                predicate_values = re.findall('\(\S+\)', predicate_info[1])
-                predicate_values_string = predicate_values_string+"Predicate '" + \
-                    predicate_info[0]+"' is set to " + \
-                    ''.join(predicate_values)+'; '
+            pred_name, pred_func = predicate.split('=')
+            if not ('boolean' in pred_func or 'trend' in pred_func):
+                predicate_values = re.findall(r'\(\S+\)', pred_func)
+                predicate_values_string += f"Predicate '{pred_name}' is set to {''.join(predicate_values)}; "
+        return predicate_values_string
 
-        # for debugging purposes you can use the additional print_source_code parameter
-        # to print the code of the sequential network and the update rules
-        # my_mtl_monitor = eval(
-        #     "mtl.monitor("+'"'+formula+"\","+params_string+",print_source_code=True)")
+    def _post_process_intervals(self, intervals, value_assignments):
+        """
+        Post process the intervals and add the predicate values to the log string.
 
-        my_mtl_monitor = eval(
-            "mtl.monitor("+'"'+formula+"\","+params_string+")")
+        :param intervals: The intervals to post process.
+        :param value_assignments: The value assignments for each metric over time.
+        :return: The post processed intervals.
+        """
+        predicate_values_string = self._create_predicate_string()
+        for i, row in enumerate(intervals):
+            mtl_result = bool(row[2])
+            if not mtl_result:
+                log_str = f"{predicate_values_string} Input measurements: {value_assignments[row[0]]} at time {row[0]};"
+                row = (row[0], row[1], mtl_result, log_str)
+            else:
+                row = (row[0], row[1], mtl_result)
+            intervals[i] = row
+        return intervals
 
+    def evaluate(self, points_names, data_array, reverse=False):
+        my_mtl_monitor = self._create_monitor()
 
-        predicate_input_values = []
-        for j in range(len(data_array[0])):
-            eval_string = "my_mtl_monitor.update("
-            for i in range(len(data_array)):
+        data = np.array(data_array, dtype=float)
+        data[data == np.nan] = 0
 
-                if i == len(data_array)-1:
+        # list of value assignments for each metric over time:
+        # [{'x': 1, 'y': 2, 'z': 3}, {'x': 2, 'y': 3, 'z': 4}, ...]
+        value_assignments = [dict(zip(points_names, row)) for row in data.T]
+        mtl_eval_output = [my_mtl_monitor.update(**assignment) for assignment in value_assignments]
 
-                    if(str(data_array[i][j]) == "NaN"):
-                        data_array[i][j] = 0
-                    eval_string = eval_string + \
-                        points_names[i]+"="+str(data_array[i][j])
-                else:
-                    if(str(data_array[i][j]) == "NaN"):
-                        data_array[i][j] = 0
-                    eval_string = eval_string + \
-                        points_names[i]+"="+str(data_array[i][j])+","
-
-            predicate_input_values.append(eval_string.replace(
-                "my_mtl_monitor.update", "")+")")
-
-            eval_string = eval_string+")"
-            output = eval(eval_string)
-            #print(my_mtl_monitor.time, output,
-            #      my_mtl_monitor.states, predicate_input_values[-1])
-            mtl_eval_output.append(output)
-
-            # with open("result_log.txt", "a") as external_file:
-            #     add_text = my_mtl_monitor.time, output, my_mtl_monitor.states, predicate_input_values[-1]
-            #     print(add_text, file=external_file)
-            #     external_file.close()
-
-        intervals = MTLPlotter(mtl_eval_output, points_names,
-                               data_array, predicate_input_values, reverse).create_plot()
-
-        for i in range(len(intervals)):
-            if intervals[i][2] == False:
-                intervals[i] = (intervals[i][0], intervals[i][1], intervals[i][2],
-                                predicate_values_string+" Input measurements: "+predicate_input_values[intervals[i][0]]+' at time ' + str(intervals[i][0]) + ';')
+        intervals = MTLPlotter(mtl_eval_output, points_names, data_array, [], reverse).create_plot()
+        intervals = self._post_process_intervals(intervals, value_assignments)
 
         return mtl_eval_output, intervals

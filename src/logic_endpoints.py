@@ -1,3 +1,5 @@
+import logging
+import time
 from audioop import mul
 from typing import Tuple
 
@@ -114,8 +116,9 @@ def start_evaluation(formula, params_string, formula_info):
             array.reverse()
         reverse = True
 
-    mtl_eval_output, intervals = MTLEvaluator().evaluate(
-        formula, params_string, points_names, multi_dim_array, reverse=reverse)
+    mtl_eval_output, intervals = MTLEvaluator(formula, params_string).evaluate(
+        points_names, multi_dim_array, reverse=reverse
+    )
 
     result_dict = {
         'result': str(mtl_eval_output[-1]),
