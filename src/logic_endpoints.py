@@ -11,6 +11,7 @@ import numpy
 from data_retrieval.csv_data_retriever import CSVDataRetriever
 from data_retrieval.influx_data_retriever import InfluxDataRetriever
 from data_retrieval.prometheus_data_retriever import PrometheusDataRetriever
+from data_retrieval.misim_retriever import MisimDataRetriever
 from handlers.formula_handler import FormulaHandler
 from mtl_evaluation.mtl_evaluator import MTLEvaluator
 from mtl_evaluation.mtl_refinement import MTLRefiner
@@ -99,6 +100,11 @@ def _data_from_formula_info(formula_info):
             df, formula_info['measurement_points']
         )
 
+    elif source == "misim":
+        sim_path = formula_info["remote-misim-address"]
+        multi_dim_array, points_names = MisimDataRetriever().retrieve_data(
+            sim_path, formula_info["measurement_points"]
+        )
     else:
         raise ValueError("Invalid measurement source")
 
