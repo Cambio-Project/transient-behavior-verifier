@@ -8,13 +8,13 @@ RUN apt-get install python3 -y
 RUN apt-get upgrade python3-pip -y
 RUN apt-get install python3-pip -y
 
-COPY ./requirements.txt /app/requirements.txt
+COPY src/requirements.txt /app/requirements.txt
 
 RUN pip install -r requirements.txt
 
 RUN pip3 install bs4
 
-COPY . /app
+COPY src /app
 
 RUN sed -i 's/min_valdInf/min_val/g' ../usr/local/lib/python3.8/dist-packages/monitors/mtl.py
 

@@ -57,20 +57,19 @@ The plotter is implemented in the ```src/mtl_evaluation/mtl_plotter.py``` file. 
 
 ## How to run the tool in a docker container:
 
-1. Navigate to the src folder
-2. Build the docker image:
+1. Build the docker image:
 
 ```
 docker build . -t transient-behavior-verifier
 ```
 
-3. Run the container:
+2. Run the container:
 
 ```
 docker run -p 5000:5000 transient-behavior-verifier
 ```
 
-4. You should now be able to access the web UI via ```localhost:5000```
+3.  You should now be able to access the web UI via ```localhost:5000```
 
 ## How to run the correctness evaluation:
 
