@@ -102,8 +102,9 @@ def _data_from_formula_info(formula_info):
 
     elif source == "misim":
         sim_path = formula_info["remote-misim-address"]
+        store_combined_file = formula_info.get("store_combined_file", False)
         multi_dim_array, points_names = MisimDataRetriever().retrieve_data(
-            sim_path, formula_info["measurement_points"]
+            sim_path, formula_info["measurement_points"], store_combined_file
         )
     else:
         raise ValueError("Invalid measurement source")
