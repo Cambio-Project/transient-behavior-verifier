@@ -25,8 +25,11 @@ class MisimDataRetriever(DataRetriever):
         :return: A multidimensional array of the simulation data.
         """
         files = Path(sim_path).glob('[!_]*.csv')
-        df_list = [pd.read_csv(file, index_col="SimulationTime") for file in files]
 
+        if not files:
+            raise FileNotFoundError("No simulation files found.")
+
+        df_list = [pd.read_csv(file, index_col="SimulationTime") for file in files]
         df = reduce(lambda left, right: left.join(right, on="SimulationTime"), df_list)
         df = df.fillna(method="ffill", axis=0)
 
