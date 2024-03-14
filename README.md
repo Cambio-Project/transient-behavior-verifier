@@ -57,20 +57,19 @@ The plotter is implemented in the ```src/mtl_evaluation/mtl_plotter.py``` file. 
 
 ## How to run the tool in a docker container:
 
-1. Navigate to the src folder
-2. Build the docker image:
+1. Build the docker image:
 
 ```
 docker build . -t transient-behavior-verifier
 ```
 
-3. Run the container:
+2. Run the container:
 
 ```
 docker run -p 5000:5000 transient-behavior-verifier
 ```
 
-4. You should now be able to access the web UI via ```localhost:5000```
+3.  You should now be able to access the web UI via ```localhost:5000```
 
 ## How to run the correctness evaluation:
 
@@ -100,19 +99,20 @@ In order to add new fuctions, simply define define additional functions that ret
 The prototype implements a REST API. All available endpoints are listed below together with information about them:
 
 
-| URL | Method | Body | Info |
-| -------- | -------- | -------- | -------- |
-| ```/monitor```     | ```POST```   | A JSON object containg a transient behavior specification. | Initiates the evaluation of a transient behavior specificaiton.     |
-| ```/insert_spec_into_exp```     | ```POST```  |  ```multipart/form-data``` - containing a transient behavior specification and a JSON file containig a chaos experiment.  | Inserts a transient behavior specification into a CTK chaos experiment and returns it as a downloadable file.     |
-| ```/save_spec```     | ```POST```   | ```form-data``` containing a transient behavior specification. | Saves a transient behavior specification in a JSON file.     |
-| ```/result```     | ```GET, POST```  |   | Runs a transient behavior verification by calling the ```/monitor``` endpoint and returns the page visualizing the results.     |
-| ```/```     | ```GET```  |   | Returns the welcoming page.     |
-| ```/index```     | ```GET```  |   | Also returns the welcoming page.     |
-| ```/create_spec_mtl```     | ```GET```  |   | Returns the page for creating a transient behavior specification using an MTL formula.     |
-| ```/create_spec_psp```     | ```GET```   |  | Returns the page for creating a transient behavior specification using a PSP definition.     |
-| ```/spec_selector```     | ```GET```   |  | Returns the page in which the user can select the way to define the behavior specification, i.e. MTL or PSP.     |
-| ```/create_exp```     | ```GET```   |  | Returns the page where a transient behavior specification can be inserted into a CTK chaos experiment.     |
-| ```/verify_behav```     | ```GET```   |  | Returns the page where a transient behavior verification can be carried out in a stand-alone manner.     |
+| URL                         | Method          | Body                                                                                                                    | Info                                                                                                                        |
+|-----------------------------|-----------------|-------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| ```/monitor```              | ```POST```      | A JSON object containg a transient behavior specification.                                                              | Initiates the evaluation of a transient behavior specificaiton.                                                             |
+| ```/refine_timebound```     | ```POST```      | A JSON object containg a transient behavior specification.<br/>The timebound in the specification is irrelevant.        | Performs binary search to find the a time bound that satisfies the transient behavior specification.                        |
+| ```/insert_spec_into_exp``` | ```POST```      | ```multipart/form-data``` - containing a transient behavior specification and a JSON file containig a chaos experiment. | Inserts a transient behavior specification into a CTK chaos experiment and returns it as a downloadable file.               |
+| ```/save_spec```            | ```POST```      | ```form-data``` containing a transient behavior specification.                                                          | Saves a transient behavior specification in a JSON file.                                                                    |
+| ```/result```               | ```GET, POST``` |                                                                                                                         | Runs a transient behavior verification by calling the ```/monitor``` endpoint and returns the page visualizing the results. |
+| ```/```                     | ```GET```       |                                                                                                                         | Returns the welcoming page.                                                                                                 |
+| ```/index```                | ```GET```       |                                                                                                                         | Also returns the welcoming page.                                                                                            |
+| ```/create_spec_mtl```      | ```GET```       |                                                                                                                         | Returns the page for creating a transient behavior specification using an MTL formula.                                      |
+| ```/create_spec_psp```      | ```GET```       |                                                                                                                         | Returns the page for creating a transient behavior specification using a PSP definition.                                    |
+| ```/spec_selector```        | ```GET```       |                                                                                                                         | Returns the page in which the user can select the way to define the behavior specification, i.e. MTL or PSP.                |
+| ```/create_exp```           | ```GET```       |                                                                                                                         | Returns the page where a transient behavior specification can be inserted into a CTK chaos experiment.                      |
+| ```/verify_behav```         | ```GET```       |                                                                                                                         | Returns the page where a transient behavior verification can be carried out in a stand-alone manner.                        |
 
 
 ## JSON specification description:
@@ -133,6 +133,7 @@ The prototype implements a REST API. All available endpoints are listed below to
 * ```measurement_source``` A required text field defining the source of the measurement data, currently supporting ```influx``` for InfluxDB, ```prometheus``` for Prometheus,```csv``` for local CSV files, and ```remote-csv``` for remote csv files, for example hosted on a web server.
 	
 * ```remote-csv-address``` Required when ```measurement_source``` is set to ```remote-csv```. This field contains the URL to the CSV table. 
+* ```remote-misim-address``` Required when ```measurement_source``` is set to ```misim```. This field contains the URL to the MiSim simulation results (set of result files in CSV format).
 	
 * ```measurement_points``` A required array containing information regarding the measurement data. 
 	
@@ -143,3 +144,6 @@ The prototype implements a REST API. All available endpoints are listed below to
 	*    ```end_time``` A text field for specifying the end time of the query interval. Only required when ```measurement_source``` is set to ```prometheus```.
 	*    ```steps``` A text field for specifying the steps of the query interval. Only required when ```measurement_source``` is set to ```prometheus```.
 
+* ```options``` Set of options to configure TBVerifier behavior.
+	* ```create_plots``` [Default: True] Whether to create plots for the verification results.
+    * ```store_combined_misim_results``` [Default: False] Store the combined misim metrics in a file called "_combined.csv" in the same directory as the misim files.

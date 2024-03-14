@@ -133,6 +133,16 @@
             ],
             "pattern": "^.*$"
         },
+        "remote-misim-address": {
+            "$id": "#root/remote-misim-address",
+            "title": "Remote Address to MiSim Results",
+            "type": "string",
+            "default": "",
+            "examples": [
+                "localhost:8000/misim_data"
+            ],
+            "pattern": "^.*$"
+        },
         "measurement_points": {
             "$id": "#root/measurement_points",
             "title": "Measurement_points",
@@ -197,6 +207,34 @@
                         "pattern": "^.*$"
                     }
                 }
+            }
+        },
+        "options": {
+            "$id": "#root/options",
+            "title": "Options",
+            "type": "object",
+            "properties": {
+                "create_plots": {
+                    "$id": "#root/options/create_plots",
+                    "title": "Create Plots",
+                    "type": "boolean",
+                    "default": "True",
+                    "examples": [
+                        "True"
+                    ],
+                    "pattern": "^.*$"
+                },
+                "store_combined_misim_results": {
+                    "$id": "#root/options/store_combined_mi_sim_results",
+                    "title": "Store Combined MiSim Results",
+                    "type": "boolean",
+                    "default": "True",
+                    "examples": [
+                        "True"
+                    ],
+                    "pattern": "^.*$"
+                }
+
             }
         }
     },
