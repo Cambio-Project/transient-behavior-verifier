@@ -143,5 +143,5 @@ class MTLRefiner:
         :return: Whether the formula is satisfied and the interval.
         """
         evaluator = MTLEvaluator(self._mapper.get_formula(), self._params_string)
-        mtl_result, interval = evaluator.evaluate(self._points_names, self._data)
+        mtl_result, interval = evaluator.evaluate(self._points_names, self._data, create_plots=False)
         return mtl_result[-1], interval

@@ -60,7 +60,7 @@ class MTLEvaluator:
             intervals[i] = row
         return intervals
 
-    def evaluate(self, points_names, data_array, reverse=False):
+    def evaluate(self, points_names, data_array, reverse=False, create_plots: bool = True):
         my_mtl_monitor = self._create_monitor()
 
         data = np.array(data_array, dtype=float)
@@ -71,7 +71,12 @@ class MTLEvaluator:
         value_assignments = [dict(zip(points_names, row)) for row in data.T]
         mtl_eval_output = [my_mtl_monitor.update(**assignment) for assignment in value_assignments]
 
-        intervals = MTLPlotter(mtl_eval_output, points_names, data_array, [], reverse).create_plot()
+        plotter = MTLPlotter(mtl_eval_output, points_names, data_array, [], reverse)
+        if create_plots:
+            intervals = plotter.create_plot()
+        else:
+            intervals = plotter.create_intervals()
+
         intervals = self._post_process_intervals(intervals, value_assignments)
 
         return mtl_eval_output, intervals

@@ -24,16 +24,16 @@ class MisimDataRetriever(DataRetriever):
             combined simulation data.
         :return: A multidimensional array of the simulation data.
         """
-        files = Path(sim_path).glob('*.csv')
+        files = Path(sim_path).glob('[!_]*.csv')
         df_list = [pd.read_csv(file, index_col="SimulationTime") for file in files]
 
         df = reduce(lambda left, right: left.join(right, on="SimulationTime"), df_list)
-        df = df[column_names]
         df = df.fillna(method="ffill", axis=0)
 
         if store_combined_file:
             df.to_csv(Path(sim_path) / "_combined.csv", index=True)
 
+        df = df[column_names]
         return df.to_numpy().T.tolist()
 
     def retrieve_data(self, sim_path: str, points_info: List[Any], store_combined_file: bool):

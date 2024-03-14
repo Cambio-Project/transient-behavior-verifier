@@ -133,6 +133,7 @@ The prototype implements a REST API. All available endpoints are listed below to
 * ```measurement_source``` A required text field defining the source of the measurement data, currently supporting ```influx``` for InfluxDB, ```prometheus``` for Prometheus,```csv``` for local CSV files, and ```remote-csv``` for remote csv files, for example hosted on a web server.
 	
 * ```remote-csv-address``` Required when ```measurement_source``` is set to ```remote-csv```. This field contains the URL to the CSV table. 
+* ```remote-misim-address``` Required when ```measurement_source``` is set to ```misim```. This field contains the URL to the MiSim simulation results (set of result files in CSV format).
 	
 * ```measurement_points``` A required array containing information regarding the measurement data. 
 	
@@ -143,3 +144,6 @@ The prototype implements a REST API. All available endpoints are listed below to
 	*    ```end_time``` A text field for specifying the end time of the query interval. Only required when ```measurement_source``` is set to ```prometheus```.
 	*    ```steps``` A text field for specifying the steps of the query interval. Only required when ```measurement_source``` is set to ```prometheus```.
 
+* ```options``` Set of options to configure TBVerifier behavior.
+	* ```create_plots``` [Default: True] Whether to create plots for the verification results.
+    * ```store_combined_misim_results``` [Default: False] Store the combined misim metrics in a file called "_combined.csv" in the same directory as the misim files.

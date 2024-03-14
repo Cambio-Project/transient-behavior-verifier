@@ -52,7 +52,7 @@ def monitor():
     mtl_result = start_evaluation(
         formula=formula,
         params_string=params_string,
-        formula_info=formula_info
+        formula_info=formula_info,
     )
     return mtl_result
 
@@ -71,7 +71,7 @@ def _formula_info_from_request() -> dict:
     return formula_info
 
 
-def _data_from_formula_info(formula_info):
+def _data_from_formula_info(formula_info: dict, options: dict):
     source = formula_info["measurement_source"]
 
     if source == "influx":
@@ -102,9 +102,11 @@ def _data_from_formula_info(formula_info):
 
     elif source == "misim":
         sim_path = formula_info["remote-misim-address"]
-        store_combined_file = formula_info.get("store_combined_file", False)
+        store_combined_file = options.get("store_combined_misim_results", False)
         multi_dim_array, points_names = MisimDataRetriever().retrieve_data(
-            sim_path, formula_info["measurement_points"], store_combined_file
+            sim_path,
+            formula_info["measurement_points"],
+            store_combined_file
         )
     else:
         raise ValueError("Invalid measurement source")
@@ -113,8 +115,8 @@ def _data_from_formula_info(formula_info):
 
 
 def start_evaluation(formula, params_string, formula_info):
-
-    points_names, multi_dim_array = _data_from_formula_info(formula_info)
+    options: dict = formula_info.get('options', {})
+    points_names, multi_dim_array = _data_from_formula_info(formula_info, options)
 
     # if the formula is in future-MTL the trace is reversed and the results also
     reverse = False
@@ -124,7 +126,10 @@ def start_evaluation(formula, params_string, formula_info):
         reverse = True
 
     mtl_eval_output, intervals = MTLEvaluator(formula, params_string).evaluate(
-        points_names, multi_dim_array, reverse=reverse
+        points_names,
+        multi_dim_array,
+        reverse=reverse,
+        create_plots=options.get('create_plots', True),
     )
 
     result_dict = {
