@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Tuple, List, Dict, Optional
 from mtl_evaluation.mtl_evaluator import MTLEvaluator
 from handlers.formula_handler import FormulaHandler
-from handlers.psp_mapper import PSPMapper
+from handlers.psp_mapper import FormulaMapper
 
 
 @dataclass
@@ -28,7 +28,13 @@ class MTLRefiner:
     """
 
     def __init__(self, formula_info: Dict, points_names: List[str], data: List):
-        self._mapper: PSPMapper = PSPMapper.from_psp(formula_info['specification'])
+        if formula_info['specification_type'] == 'psp':
+            self._mapper: FormulaMapper = FormulaMapper.from_psp(formula_info['specification'])
+        elif formula_info['specification_type'] == 'tbv':
+            self._mapper: FormulaMapper = FormulaMapper.from_tbv(formula_info['specification'])
+        else:
+            raise Exception("Invalid specification type")
+
         self._params_string: str = FormulaHandler().get_params_string(formula_info)
         self._is_two_sided_search: bool = self._mapper.has_lower_bound() and self._mapper.has_upper_bound()
         self._data: List = data

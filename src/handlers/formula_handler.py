@@ -1,5 +1,5 @@
 
-from handlers.psp_mapper import PSPMapper
+from handlers.psp_mapper import FormulaMapper
 from handlers.predicate_functions import Predicates
 
 
@@ -44,6 +44,8 @@ class FormulaHandler():
     def handle_formula(self, formula_info):
         formula = formula_info['specification']
         if formula_info['specification_type'] == 'psp':
-            formula = PSPMapper.from_psp(formula).get_formula()
+            formula = FormulaMapper.from_psp(formula).get_formula()
+        if formula_info['specification_type'] == 'tbv':
+            formula = FormulaMapper.from_tbv(formula).get_formula()
         params_string = self.get_params_string(formula_info)
         return formula, params_string

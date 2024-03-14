@@ -4,7 +4,7 @@ from soupsieve import match
 from handlers.psp_patterns import *
 
 
-class PSPMapper:
+class FormulaMapper:
     """A class responsible for the mapping of PSPs to past-MTL formulas"""
 
     def __init__(self, formula=None, formula_params=None, source_pattern=None):
@@ -39,7 +39,7 @@ class PSPMapper:
 
     @staticmethod
     def map_pattern(input_pattern):
-        return PSPMapper.from_psp(input_pattern).get_formula()
+        return FormulaMapper.from_psp(input_pattern).get_formula()
 
     @staticmethod
     def extract_list_predicates(input_pattern):
@@ -58,13 +58,35 @@ class PSPMapper:
         return list_predicates
 
     @staticmethod
-    def from_psp(input_pattern) -> "PSPMapper":
+    def from_tbv(input_pattern) -> "FormulaMapper":
+        """
+        maps a pattern regex to the past-MTL formula
+        """
+        # Regex for [lowerbound, upperbound]
+        pattern = re.compile(r"\[(\d+),(\d+)]")
+
+        # Search for the pattern in the input pattern, only the first match
+        if m := pattern.search(input_pattern):
+            formula = pattern.sub("[{lower_bound},{upper_bound}]", input_pattern, count=1)
+            formula_params = {
+                "lower_bound": m.group(1),
+                "upper_bound": m.group(2),
+            }
+        else:
+            formula = input_pattern
+            formula_params = {}
+
+        return FormulaMapper(formula, formula_params, input_pattern)
+
+
+    @staticmethod
+    def from_psp(input_pattern) -> "FormulaMapper":
         """
         maps a pattern regex to the past-MTL formula
 
         :return: the past-MTL formula
         """
-        list_predicates = PSPMapper.extract_list_predicates(input_pattern)
+        list_predicates = FormulaMapper.extract_list_predicates(input_pattern)
 
         if re.match(absence_after_q, input_pattern):
             formula = "always((once({pred1})) -> ((not {pred2}) since {pred1}))"
@@ -208,4 +230,4 @@ class PSPMapper:
         else:
             raise Exception("PSP pattern could not be matched!")
 
-        return PSPMapper(formula, formula_params, input_pattern)
+        return FormulaMapper(formula, formula_params, input_pattern)
