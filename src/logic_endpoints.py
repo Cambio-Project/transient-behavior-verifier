@@ -71,7 +71,8 @@ def _formula_info_from_request() -> dict:
     return formula_info
 
 
-def _data_from_formula_info(formula_info: dict, options: dict):
+def _data_from_formula_info(formula_info: dict):
+    options: dict = formula_info.get('options', {})
     source = formula_info["measurement_source"]
 
     if source == "influx":
@@ -115,8 +116,7 @@ def _data_from_formula_info(formula_info: dict, options: dict):
 
 
 def start_evaluation(formula, params_string, formula_info):
-    options: dict = formula_info.get('options', {})
-    points_names, multi_dim_array = _data_from_formula_info(formula_info, options)
+    points_names, multi_dim_array = _data_from_formula_info(formula_info)
 
     # if the formula is in future-MTL the trace is reversed and the results also
     reverse = False
@@ -125,6 +125,7 @@ def start_evaluation(formula, params_string, formula_info):
             array.reverse()
         reverse = True
 
+    options: dict = formula_info.get('options', {})
     mtl_eval_output, intervals = MTLEvaluator(formula, params_string).evaluate(
         points_names,
         multi_dim_array,

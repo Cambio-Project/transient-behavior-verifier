@@ -10,6 +10,8 @@ RUN pip3 install bs4
 
 COPY src /app
 
+RUN sed -i 's/min_valdInf/min_val/g' ../usr/local/lib/python3.10/site-packages/monitors/mtl.py
+
 ENV FLASK_APP=main.py
 
 EXPOSE 5000
