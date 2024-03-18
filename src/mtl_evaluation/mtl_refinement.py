@@ -88,9 +88,9 @@ class MTLRefiner:
         :return: Whether the timebound has been refined.
         """
         if self._refined_bounds.lower < 0:
-            if not is_satisfied:
+            if not is_satisfied and not current_bounds.lower == 0:
                 # found lower bound if the formula is not satisfied and the previous one was
-                current_bounds.lower -= 1
+                current_bounds.lower = current_bounds.lower - 1
                 self._refined_bounds.lower = current_bounds.upper = current_bounds.lower
             else:
                 current_bounds.lower += 1
@@ -114,7 +114,7 @@ class MTLRefiner:
         :return: Whether the timebound has been refined.
         """
         if self._refined_bounds.upper < 0:
-            if not is_satisfied:
+            if not is_satisfied and not current_bounds.upper == 0:
                 self._refined_bounds.upper = current_bounds.upper - 1
                 return True
             elif current_bounds.upper == self._max_index:
