@@ -34,7 +34,7 @@ class MTLPredicateRefiner:
         self._data: List = data
         self._points_names: List[str] = points_names
 
-    def refine_predicate(self, predicate_name, metric_name, use_formula=True) -> Dict[Any, bool]:
+    def refine_predicate(self, predicate_name, metric_name,) -> Tuple[Tuple[int, int, int], List[bool]]:
         """
         Refines the predicate specification for a given metric.
 
@@ -45,9 +45,7 @@ class MTLPredicateRefiner:
 
         :param predicate_name: The predicate name.
         :param metric_name: The metric name.
-        :param use_formula: If True, the predicate is refined using the specification formula.
-            If False, the predicate is only refined in the context of the given metric.
-        :return: Mapping from values to whether the predicate is satisfied given the value.
+        :return: Evaluated interval (min, max, step) and the result of the refinement.
         """
         if predicate_name not in self._specification.predicates:
             raise ValueError(f"Predicate '{predicate_name}' not found in the specification.")
@@ -56,27 +54,36 @@ class MTLPredicateRefiner:
         values = np.array(values, dtype=float)
         values[values == np.nan] = 0
 
-        max_value = int(np.max(values))
+        # min and max values for the metric, with a 10% margin
+        min_value = max(np.min(values) - np.min(values) / 10, 0)
+        max_value = np.max(values) + np.max(values) / 10
 
-        result = {}
-        for i in range(max_value + 2):
+        # choose step value so that the number of iterations is limited to 100
+        step = (max_value - min_value) / 100
+
+        if max_value > 1:
+            # round values to the nearest multiple of 5
+            min_value = min_value - (min_value % 5)
+            max_value = max_value + (5 - (max_value % 5))
+            step = max(1, step)  # step should be at least 1
+            _range = np.arange(int(min_value), int(max_value), int(step))
+        else:
+            # round min, max and step to 5 decimal places for return
+            min_value = np.round(min_value, 5)
+            max_value = np.round(max_value, 5)
+            step = np.round(step, 5)
+            # create range and round to 5 decimal places for iteration
+            _range = np.arange(min_value, max_value, step)
+            _range = _range.round(5)
+
+        result = []
+        for i in _range:
             self._specification.set_predicate_comparison_value(predicate_name, i)
-            if use_formula:
-                result[i] = self._refine_with_formula()
-            else:
-                result[i] = self._refine_no_formula(predicate_name, values)
+            evaluator = MTLEvaluator(self._specification)
+            mtl_result, _ = evaluator.evaluate(self._points_names, self._data, create_plots=False)
+            result.append(bool(mtl_result[-1]))
 
-        return result
-
-    def _refine_no_formula(self, predicate_name, values):
-        pred_func = self._specification.get_predicate_function(predicate_name)
-        v_pred_func = np.vectorize(pred_func)
-        return bool(v_pred_func(values).any())
-
-    def _refine_with_formula(self):
-        evaluator = MTLEvaluator(self._specification)
-        mtl_result, _ = evaluator.evaluate(self._points_names, self._data, create_plots=False)
-        return bool(mtl_result[-1])
+        return (min_value, max_value, step), result
 
 
 class MTLTimeRefiner:

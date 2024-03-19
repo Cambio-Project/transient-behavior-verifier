@@ -20,11 +20,13 @@ class Specification:
 
         self.predicates = {}
         for pred in self._formula_info["predicates_info"]:
-            comparison_value = pred.get("predicate_comparison_value", None)
-            if str.isnumeric(comparison_value):
-                comparison_value = float(comparison_value)
-            if comparison_value in ["True", "False"]:
-                comparison_value = comparison_value == "True"
+            if comparison_value := pred.get("predicate_comparison_value", None):
+                try:
+                    comparison_value = float(comparison_value)
+                except ValueError:
+                    pass
+                if comparison_value in ["True", "False"]:
+                    comparison_value = comparison_value == "True"
 
             self.predicates[pred["predicate_name"]] = {
                 "predicate_logic": pred["predicate_logic"],

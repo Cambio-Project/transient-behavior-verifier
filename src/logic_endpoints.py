@@ -50,16 +50,15 @@ def refine_predicate():
     """
     Refines the predicate specification.
 
-    :return:
+    :return: The interval (min, max, step) and the result of the refined predicate.
     """
     predicate = request.args['predicate']
     metric = request.args['metric']
-    use_formula = request.args.get('use_formula', "true", type=json.loads)
     formula_info = _formula_info_from_request()
     points_names, multi_dim_array = _data_from_formula_info(formula_info)
     refiner = MTLPredicateRefiner(formula_info, points_names, multi_dim_array)
-    result = refiner.refine_predicate(predicate, metric, use_formula)
-    return json.dumps({"result": result})
+    interval, result = refiner.refine_predicate(predicate, metric)
+    return json.dumps({"interval": interval, "result": result})
 
 
 @logic_api.route('/monitor', methods=['POST'])
