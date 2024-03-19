@@ -63,10 +63,10 @@ class MTLPredicateRefiner:
 
         if max_value > 1:
             # round values to the nearest multiple of 5
-            min_value = min_value - (min_value % 5)
-            max_value = max_value + (5 - (max_value % 5))
-            step = max(1, step)  # step should be at least 1
-            _range = np.arange(int(min_value), int(max_value), int(step))
+            min_value = int(min_value - (min_value % 5))
+            max_value = int(max_value + (5 - (max_value % 5)))
+            step = int(max(1, step))  # step should be at least 1
+            _range = np.arange(min_value, max_value, step)
         else:
             # round min, max and step to 5 decimal places for return
             min_value = np.round(min_value, 5)
