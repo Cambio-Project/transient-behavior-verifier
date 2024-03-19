@@ -1,10 +1,7 @@
-import re
-from numpy import mat
-from soupsieve import match
 from handlers.psp_patterns import *
 
 
-class FormulaMapper:
+class Formula:
     """A class responsible for the mapping of PSPs to past-MTL formulas"""
 
     def __init__(self, formula=None, formula_params=None, source_pattern=None):
@@ -12,7 +9,7 @@ class FormulaMapper:
         self._formula_params = formula_params or {}
         self.source_pattern = source_pattern
 
-    def get_formula(self):
+    def to_string(self):
         return self._formula.format(**self._formula_params)
 
     def get_lower_bound(self):
@@ -38,11 +35,11 @@ class FormulaMapper:
         self._formula_params["upper_bound"] = upper_bound
 
     @staticmethod
-    def map_pattern(input_pattern):
-        return FormulaMapper.from_psp(input_pattern).get_formula()
+    def map_pattern(input_pattern) -> str:
+        return Formula.from_psp(input_pattern).to_string()
 
     @staticmethod
-    def extract_list_predicates(input_pattern):
+    def extract_list_predicates(input_pattern) -> list:
         """
         Extracts the list of predicates from the input pattern
 
@@ -58,7 +55,19 @@ class FormulaMapper:
         return list_predicates
 
     @staticmethod
-    def from_tbv(input_pattern) -> "FormulaMapper":
+    def from_specification(specification) -> "Formula":
+        """
+        Create specification from specification dictionary.
+        """
+        if specification["specification_type"] == "psp":
+            return Formula.from_psp(specification["specification"])
+        elif specification["specification_type"] == "tbv":
+            return Formula.from_tbv(specification["specification"])
+        else:
+            return Formula(specification["specification"])
+
+    @staticmethod
+    def from_tbv(input_pattern) -> "Formula":
         """
         maps a pattern regex to the past-MTL formula
         """
@@ -76,17 +85,16 @@ class FormulaMapper:
             formula = input_pattern
             formula_params = {}
 
-        return FormulaMapper(formula, formula_params, input_pattern)
-
+        return Formula(formula, formula_params, input_pattern)
 
     @staticmethod
-    def from_psp(input_pattern) -> "FormulaMapper":
+    def from_psp(input_pattern) -> "Formula":
         """
         maps a pattern regex to the past-MTL formula
 
         :return: the past-MTL formula
         """
-        list_predicates = FormulaMapper.extract_list_predicates(input_pattern)
+        list_predicates = Formula.extract_list_predicates(input_pattern)
 
         if re.match(absence_after_q, input_pattern):
             formula = "always((once({pred1})) -> ((not {pred2}) since {pred1}))"
@@ -230,4 +238,4 @@ class FormulaMapper:
         else:
             raise Exception("PSP pattern could not be matched!")
 
-        return FormulaMapper(formula, formula_params, input_pattern)
+        return Formula(formula, formula_params, input_pattern)

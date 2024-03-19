@@ -7,7 +7,7 @@ import pandas as pd
 from jsonschema import validate
 from data_retrieval.csv_data_retriever import CSVDataRetriever
 from data_retrieval.influx_data_retriever import InfluxDataRetriever
-from handlers.formula_handler import FormulaHandler
+from handlers.specification import Specification
 from mtl_evaluation.mtl_evaluator import MTLEvaluator
 import handlers.predicate_functions as predicate_functions
 from pprint import pprint
