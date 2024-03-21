@@ -12,9 +12,9 @@ from data_retrieval.csv_data_retriever import CSVDataRetriever
 from data_retrieval.influx_data_retriever import InfluxDataRetriever
 from data_retrieval.prometheus_data_retriever import PrometheusDataRetriever
 from data_retrieval.misim_retriever import MisimDataRetriever
-from handlers.formula_handler import FormulaHandler
+from handlers.specification import Specification
 from mtl_evaluation.mtl_evaluator import MTLEvaluator
-from mtl_evaluation.mtl_refinement import MTLRefiner
+from mtl_evaluation.mtl_refinement import MTLTimeRefiner, MTLPredicateRefiner
 import handlers.predicate_functions as predicate_functions
 import pandas as pd
 import configparser
@@ -32,7 +32,7 @@ def after_request(response):
 
 
 @logic_api.route('/refine_timebound', methods=['POST'])
-def refine():
+def refine_timebound():
     """
     Refines the timebound of the transient behavior specification.
 
@@ -40,20 +40,31 @@ def refine():
     """
     formula_info = _formula_info_from_request()
     points_names, multi_dim_array = _data_from_formula_info(formula_info)
-    refiner = MTLRefiner(formula_info, points_names, multi_dim_array)
+    refiner = MTLTimeRefiner(formula_info, points_names, multi_dim_array)
     result = refiner.refine_timebound()
     return json.dumps(result)
+
+
+@logic_api.route('/refine_predicate', methods=['POST'])
+def refine_predicate():
+    """
+    Refines the predicate specification.
+
+    :return: The interval (min, max, step) and the result of the refined predicate.
+    """
+    predicate = request.args['predicate']
+    metric = request.args['metric']
+    formula_info = _formula_info_from_request()
+    points_names, multi_dim_array = _data_from_formula_info(formula_info)
+    refiner = MTLPredicateRefiner(formula_info, points_names, multi_dim_array)
+    interval, result = refiner.refine_predicate(predicate, metric)
+    return json.dumps({"interval": interval, "result": result})
 
 
 @logic_api.route('/monitor', methods=['POST'])
 def monitor():
     formula_info = _formula_info_from_request()
-    formula, params_string = FormulaHandler().handle_formula(formula_info)
-    mtl_result = start_evaluation(
-        formula=formula,
-        params_string=params_string,
-        formula_info=formula_info,
-    )
+    mtl_result = start_evaluation(formula_info=formula_info)
     return mtl_result
 
 
@@ -115,7 +126,7 @@ def _data_from_formula_info(formula_info: dict):
     return points_names, multi_dim_array
 
 
-def start_evaluation(formula, params_string, formula_info):
+def start_evaluation(formula_info):
     points_names, multi_dim_array = _data_from_formula_info(formula_info)
 
     # if the formula is in future-MTL the trace is reversed and the results also
@@ -126,7 +137,8 @@ def start_evaluation(formula, params_string, formula_info):
         reverse = True
 
     options: dict = formula_info.get('options', {})
-    mtl_eval_output, intervals = MTLEvaluator(formula, params_string).evaluate(
+    formula_handler = Specification(formula_info)
+    mtl_eval_output, intervals = MTLEvaluator(formula_handler).evaluate(
         points_names,
         multi_dim_array,
         reverse=reverse,

@@ -1,8 +1,10 @@
 from dataclasses import dataclass
-from typing import Tuple, List, Dict, Optional
+from typing import Tuple, List, Dict, Optional, Any
+
+import numpy as np
+
 from mtl_evaluation.mtl_evaluator import MTLEvaluator
-from handlers.formula_handler import FormulaHandler
-from handlers.psp_mapper import FormulaMapper
+from handlers.specification import Specification
 
 
 @dataclass
@@ -18,7 +20,73 @@ class Interval:
         )
 
 
-class MTLRefiner:
+class MTLPredicateRefiner:
+    """
+    A class responsible for refining the predicate specification.
+
+    :param formula_info: The formula information.
+    :param points_names: The predicate names.
+    :param data: The data as multidimensional array.
+    """
+
+    def __init__(self, formula_info: Dict, points_names: List[str], data: List):
+        self._specification: Specification = Specification(formula_info)
+        self._data: List = data
+        self._points_names: List[str] = points_names
+
+    def refine_predicate(self, predicate_name, metric_name,) -> Tuple[Tuple[int, int, int], List[bool]]:
+        """
+        Refines the predicate specification for a given metric.
+
+        If the use_formula parameter is set to False, the predicate is refined
+        as if the mtl formula was set to <predicate_name>(<metric_name), but using
+        numpy vectorized operations. This is useful for performance reasons when
+        the formula is not needed to refine the predicate.
+
+        :param predicate_name: The predicate name.
+        :param metric_name: The metric name.
+        :return: Evaluated interval (min, max, step) and the result of the refinement.
+        """
+        if predicate_name not in self._specification.predicates:
+            raise ValueError(f"Predicate '{predicate_name}' not found in the specification.")
+
+        values = self._data[self._points_names.index(metric_name)]
+        values = np.array(values, dtype=float)
+        values[values == np.nan] = 0
+
+        # min and max values for the metric, with a 10% margin
+        min_value = max(np.min(values) - np.min(values) / 10, 0)
+        max_value = np.max(values) + np.max(values) / 10
+
+        # choose step value so that the number of iterations is limited to 100
+        step = (max_value - min_value) / 100
+
+        if max_value > 1:
+            # round values to the nearest multiple of 5
+            min_value = int(min_value - (min_value % 5))
+            max_value = int(max_value + (5 - (max_value % 5)))
+            step = int(max(1, step))  # step should be at least 1
+            _range = np.arange(min_value, max_value, step)
+        else:
+            # round min, max and step to 5 decimal places for return
+            min_value = np.round(min_value, 5)
+            max_value = np.round(max_value, 5)
+            step = np.round(step, 5)
+            # create range and round to 5 decimal places for iteration
+            _range = np.arange(min_value, max_value, step)
+            _range = _range.round(5)
+
+        result = []
+        for i in _range:
+            self._specification.set_predicate_comparison_value(predicate_name, i)
+            evaluator = MTLEvaluator(self._specification)
+            mtl_result, _ = evaluator.evaluate(self._points_names, self._data, create_plots=False)
+            result.append(bool(mtl_result[-1]))
+
+        return (min_value, max_value, step), result
+
+
+class MTLTimeRefiner:
     """
     A class responsible for refining the timebound of the transient behavior specification.
 
@@ -28,15 +96,11 @@ class MTLRefiner:
     """
 
     def __init__(self, formula_info: Dict, points_names: List[str], data: List):
-        if formula_info['specification_type'] == 'psp':
-            self._mapper: FormulaMapper = FormulaMapper.from_psp(formula_info['specification'])
-        elif formula_info['specification_type'] == 'tbv':
-            self._mapper: FormulaMapper = FormulaMapper.from_tbv(formula_info['specification'])
-        else:
-            raise Exception("Invalid specification type")
-
-        self._params_string: str = FormulaHandler().get_params_string(formula_info)
-        self._is_two_sided_search: bool = self._mapper.has_lower_bound() and self._mapper.has_upper_bound()
+        self._specification: Specification = Specification(formula_info)
+        self._is_two_sided_search: bool = (
+                self._specification.formula.has_lower_bound()
+                and self._specification.formula.has_upper_bound()
+        )
         self._data: List = data
         self._max_index: int = len(self._data[0]) - 1
         self._points_names: List[str] = points_names
@@ -51,7 +115,7 @@ class MTLRefiner:
 
         :return: Lower and upper bounds of when the transient behavior specification is satisfied.
         """
-        if not (self._mapper.get_lower_bound() or self._mapper.get_upper_bound()):
+        if not (self._specification.formula.has_lower_bound() or self._specification.formula.has_upper_bound()):
             return {'result': 'false', 'intervals': [], 'lower_bound': None, 'upper_bound': None}
 
         current_bounds = Interval(
@@ -137,10 +201,10 @@ class MTLRefiner:
         :param bounds: New bounds of specification.
         :return: None
         """
-        if self._mapper.has_lower_bound():
-            self._mapper.set_lower_bound(bounds.lower)
-        if self._mapper.has_upper_bound():
-            self._mapper.set_upper_bound(bounds.upper)
+        if self._specification.formula.has_lower_bound():
+            self._specification.formula.set_lower_bound(bounds.lower)
+        if self._specification.formula.has_upper_bound():
+            self._specification.formula.set_upper_bound(bounds.upper)
 
     def _evaluate_formula(self) -> Tuple[bool, List]:
         """
@@ -148,6 +212,6 @@ class MTLRefiner:
 
         :return: Whether the formula is satisfied and the interval.
         """
-        evaluator = MTLEvaluator(self._mapper.get_formula(), self._params_string)
+        evaluator = MTLEvaluator(self._specification)
         mtl_result, interval = evaluator.evaluate(self._points_names, self._data, create_plots=False)
         return mtl_result[-1], interval
