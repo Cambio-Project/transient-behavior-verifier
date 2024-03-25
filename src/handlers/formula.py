@@ -1,5 +1,7 @@
 from handlers.psp_patterns import *
 
+PREDICATE_PATTERN = r'\{\S+\}|\{.+\}|\d+'
+
 
 class Formula:
     """A class responsible for the mapping of PSPs to past-MTL formulas"""
@@ -8,6 +10,7 @@ class Formula:
         self._formula = formula
         self._formula_params = formula_params or {}
         self.source_pattern = source_pattern
+        print(self._formula)
 
     def to_string(self):
         return self._formula.format(**self._formula_params)
@@ -39,37 +42,51 @@ class Formula:
         return Formula.from_psp(input_pattern).to_string()
 
     @staticmethod
-    def extract_list_predicates(input_pattern) -> list:
+    def extract_list_predicates(input_pattern, predicate_mapping=None) -> list:
         """
-        Extracts the list of predicates from the input pattern
+        Extracts the list of predicates from the input pattern.
 
-        :return: the list of predicates
+        Predicates are evaluated as Python variables. Use predicate_mapping
+        if predicate names could be Python keywords to avoid evaluation errors.
+
+        :param input_pattern: the input pattern.
+        :param predicate_mapping: optional mapping of predicate names.
+        :return: the list of predicates.
         """
-        list_predicates = re.findall('\{\S+\}|\{.+\}|\d+', input_pattern)
+        list_predicates = re.findall(PREDICATE_PATTERN, input_pattern)
         list_predicates_cleaned = []
         for item in list_predicates:
-            item = item.replace("{", "")
-            item = item.replace("}", "")
+            if predicate_mapping and item in predicate_mapping:
+                item = predicate_mapping[item]
             list_predicates_cleaned.append(item)
         list_predicates = list_predicates_cleaned
         return list_predicates
 
     @staticmethod
-    def from_specification(specification) -> "Formula":
+    def from_specification(specification, predicate_mapping=None) -> "Formula":
         """
         Create specification from specification dictionary.
         """
+        formula = specification["specification"]
+
+        if predicate_mapping:
+            for pred, replacement in predicate_mapping.items():
+                formula = formula.replace(pred, replacement)
+
         if specification["specification_type"] == "psp":
-            return Formula.from_psp(specification["specification"])
-        elif specification["specification_type"] == "tbv":
-            return Formula.from_tbv(specification["specification"])
-        else:
-            return Formula(specification["specification"])
+            return Formula.from_psp(formula)
+        elif specification["specification_type"] in ["tbv", "mtl"]:
+            return Formula.from_tbv(formula)
+
+        return Formula(formula)
 
     @staticmethod
     def from_tbv(input_pattern) -> "Formula":
         """
         maps a pattern regex to the past-MTL formula
+
+        :param input_pattern: the input pattern
+        :return: the past-MTL formula
         """
         # Regex for [lowerbound, upperbound]
         pattern = re.compile(r"\[(\d+),(\d+)]")
@@ -92,6 +109,7 @@ class Formula:
         """
         maps a pattern regex to the past-MTL formula
 
+        :param input_pattern: the input pattern
         :return: the past-MTL formula
         """
         list_predicates = Formula.extract_list_predicates(input_pattern)
