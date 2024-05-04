@@ -99,7 +99,7 @@ def _data_from_formula_info(formula_info: dict):
     elif source == "csv":
         f = request.files['file']
         #df = pd.read_csv(f.stream, header=0, sep=',')
-        df = pd.read_csv(f.stream, header=0, sep=',|;', engine='python')
+        df = pd.read_csv(f.stream, header=0, sep=',|;', engine='python',skipinitialspace=True)
         multi_dim_array, column_names, points_names = CSVDataRetriever().retrieve_data(
             df, formula_info["measurement_points"]
         )
@@ -107,12 +107,14 @@ def _data_from_formula_info(formula_info: dict):
     elif source == "remote-csv":
         if not formula_info["remote-csv-address"]:
             raise ValueError("Remote CSV address not provided")
-        df = pd.read_csv(formula_info['remote-csv-address'])
+        df = pd.read_csv(formula_info['remote-csv-address'],skipinitialspace=True)
         multi_dim_array, column_names, points_names = CSVDataRetriever().retrieve_data(
             df, formula_info['measurement_points']
         )
 
     elif source == "misim":
+        if not formula_info["remote-misim-address"]:
+            raise ValueError("Remote MiSim Directory address not provided")
         sim_path = formula_info["remote-misim-address"]
         store_combined_file = options.get("store_combined_misim_results", False)
         multi_dim_array, points_names = MisimDataRetriever().retrieve_data(
