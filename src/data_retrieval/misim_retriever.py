@@ -29,12 +29,26 @@ class MisimDataRetriever(DataRetriever):
         if not files:
             raise FileNotFoundError("No simulation files found.")
 
-        df_list = [pd.read_csv(file, index_col="SimulationTime") for file in files]
-        df = reduce(lambda left, right: left.join(right, on="SimulationTime"), df_list)
-        df = df.fillna(method="ffill", axis=0)
+        # Import each dataset file individually; do not use SimulationColumn as index as there can be duplicate values
+        df_list = [pd.read_csv(file, index_col=False) for file in files]
 
+        # Remove duplicates in datasets to avoid multiple entries per time unit; keep last entry always
+        for i in range(len(df_list)):
+            df_list[i] = df_list[i].drop_duplicates(subset=['SimulationTime'], keep='last')
+        
+        # Merge all rows into one based on SimulationTime column
+        df = reduce(lambda left, right: left.merge(right, on="SimulationTime", how='outer'), df_list)
+
+        # Since some files may start (or end) not at the same simulation time, the rows can become unsorted
+        df = df.sort_values(by='SimulationTime')
+
+        # Fill up missing values
+        df = df.fillna(method="ffill", axis=0)
+        df = df.fillna(method="bfill", axis=0)
+        
+        # Store combined csv file
         if store_combined_file:
-            df.to_csv(Path(sim_path) / "_combined.csv", index=True)
+            df.to_csv(Path(sim_path) / "_combined.csv", index=False)
 
         df = df[column_names]
         return df.to_numpy().T.tolist()
