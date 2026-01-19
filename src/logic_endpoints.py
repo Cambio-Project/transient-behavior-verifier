@@ -40,7 +40,14 @@ def refine_timebound():
     """
     formula_info = _formula_info_from_request()
     points_names, multi_dim_array = _data_from_formula_info(formula_info)
-    refiner = MTLTimeRefiner(formula_info, points_names, multi_dim_array)
+
+    reverse = False
+    if 'future-mtl' in formula_info:
+        for array in multi_dim_array:
+            array.reverse()
+        reverse = True
+
+    refiner = MTLTimeRefiner(formula_info, points_names, multi_dim_array, reverse)
     result = refiner.refine_timebound()
     return json.dumps(result)
 
@@ -56,7 +63,14 @@ def refine_predicate():
     metric = request.args['metric']
     formula_info = _formula_info_from_request()
     points_names, multi_dim_array = _data_from_formula_info(formula_info)
-    refiner = MTLPredicateRefiner(formula_info, points_names, multi_dim_array)
+
+    reverse = False
+    if 'future-mtl' in formula_info:
+        for array in multi_dim_array:
+            array.reverse()
+        reverse = True
+
+    refiner = MTLPredicateRefiner(formula_info, points_names, multi_dim_array, reverse)
     interval, result = refiner.refine_predicate(predicate, metric)
     return json.dumps({"interval": interval, "result": result})
 

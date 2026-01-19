@@ -22,6 +22,16 @@
             ],
             "pattern": "^.*$"
         },
+        "future-mtl": {
+          "$id": "#root/options/future-mtl",
+          "title": "specification is originally a future MTL specification",
+          "type": "boolean",
+          "default": "False",
+          "examples": [
+            "True"
+          ],
+          "pattern": "^.*$"
+        },
         "specification": {
             "$id": "#root/specification",
             "title": "Specification",

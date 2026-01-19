@@ -29,12 +29,13 @@ class MTLPredicateRefiner:
     :param data: The data as multidimensional array.
     """
 
-    def __init__(self, formula_info: Dict, points_names: List[str], data: List):
+    def __init__(self, formula_info: Dict, points_names: List[str], data: List, reverse: bool):
         self._specification: Specification = Specification(formula_info)
         self._data: List = data
         self._points_names: List[str] = points_names
+        self._reverse: bool = reverse
 
-    def refine_predicate(self, predicate_name, metric_name,) -> Tuple[Tuple[int, int, int], List[bool]]:
+    def refine_predicate(self, predicate_name, metric_name) -> Tuple[Tuple[int, int, int], List[bool]]:
         """
         Refines the predicate specification for a given metric.
 
@@ -80,7 +81,7 @@ class MTLPredicateRefiner:
         for i in _range:
             self._specification.set_predicate_comparison_value(predicate_name, i)
             evaluator = MTLEvaluator(self._specification)
-            mtl_result, _ = evaluator.evaluate(self._points_names, self._data, create_plots=False)
+            mtl_result, _ = evaluator.evaluate(self._points_names, self._data, reverse=self._reverse, create_plots=False)
             result.append(bool(mtl_result[-1]))
 
         return (min_value, max_value, step), result
@@ -95,8 +96,9 @@ class MTLTimeRefiner:
     :param data: The data as multidimensional array.
     """
 
-    def __init__(self, formula_info: Dict, points_names: List[str], data: List):
+    def __init__(self, formula_info: Dict, points_names: List[str], data: List, reverse: bool):
         self._specification: Specification = Specification(formula_info)
+        self._reverse: bool = reverse
         self._is_two_sided_search: bool = (
                 self._specification.formula.has_lower_bound()
                 and self._specification.formula.has_upper_bound()
@@ -213,5 +215,5 @@ class MTLTimeRefiner:
         :return: Whether the formula is satisfied and the interval.
         """
         evaluator = MTLEvaluator(self._specification)
-        mtl_result, interval = evaluator.evaluate(self._points_names, self._data, create_plots=False)
+        mtl_result, interval = evaluator.evaluate(self._points_names, self._data, reverse=self._reverse, create_plots=False)
         return mtl_result[-1], interval
