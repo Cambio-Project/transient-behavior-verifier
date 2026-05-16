@@ -138,12 +138,16 @@ def _data_from_formula_info(formula_info: dict):
         )
     else:
         raise ValueError("Invalid measurement source")
-
     return points_names, multi_dim_array
 
 
 def start_evaluation(formula_info):
     points_names, multi_dim_array = _data_from_formula_info(formula_info)
+
+    end_mode = formula_info.get('endMode', False)
+    if end_mode:
+        points_names, multi_dim_array = _apply_end_mode(points_names, multi_dim_array)
+
 
     # if the formula is in future-MTL the trace is reversed and the results also
     reverse = False
@@ -161,6 +165,9 @@ def start_evaluation(formula_info):
         create_plots=options.get('create_plots', True),
     )
 
+    if end_mode:
+        intervals = intervals[:-1]
+
     result_dict = {
         'result': str(mtl_eval_output[-1]),
         'intervals': intervals
@@ -175,6 +182,29 @@ def start_evaluation(formula_info):
     #
     return json.dumps(result_dict)
 
+def _apply_end_mode(points_names, multi_dim_array):
+    """
+    Add an "end" marker to the trace when endMode is enabled.
+    
+    - Appends "end" to points_names
+    - Appends 0 to the end of each row in multi_dim_array
+    - Appends a copy of the last row with the last value changed to 1
+    """
+    points_names = list(points_names)
+    multi_dim_array = [list(row) for row in multi_dim_array]
+    
+    points_names.append("end")
+    
+    # Add 0 to the end of each existing row
+    for row in multi_dim_array:
+        row.append(0)
+    
+    # Copy the last row and change the last value to 1
+    last_row = multi_dim_array[-1].copy()
+    last_row[-1] = 1
+    multi_dim_array.append(last_row)
+    
+    return points_names, multi_dim_array
 
 def check_json_schema(formula_info):
     with open('behavior_json_schema.json', 'r') as file:

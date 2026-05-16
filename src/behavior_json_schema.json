@@ -219,6 +219,15 @@
                 }
             }
         },
+        "endMode": {
+            "$id": "#root/endMode",
+            "title": "Determines whether end markers are present",
+            "type": "boolean",
+            "default": false,
+            "examples": [
+                false
+            ]
+        },
         "options": {
             "$id": "#root/options",
             "title": "Options",
