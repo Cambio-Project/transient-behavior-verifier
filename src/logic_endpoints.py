@@ -41,6 +41,10 @@ def refine_timebound():
     formula_info = _formula_info_from_request()
     points_names, multi_dim_array = _data_from_formula_info(formula_info)
 
+    end_mode = formula_info.get('endMode', False)
+    if end_mode:
+        points_names, multi_dim_array = _apply_end_mode(points_names, multi_dim_array)
+
     reverse = False
     if 'future-mtl' in formula_info:
         for array in multi_dim_array:
@@ -63,6 +67,10 @@ def refine_predicate():
     metric = request.args['metric']
     formula_info = _formula_info_from_request()
     points_names, multi_dim_array = _data_from_formula_info(formula_info)
+
+    end_mode = formula_info.get('endMode', False)
+    if end_mode:
+        points_names, multi_dim_array = _apply_end_mode(points_names, multi_dim_array)
 
     reverse = False
     if 'future-mtl' in formula_info:
@@ -165,11 +173,17 @@ def start_evaluation(formula_info):
         create_plots=options.get('create_plots', True),
     )
 
+    if reverse:
+        intervals = reverse_intervals(intervals)
+        mtl_eval_output.reverse()
+    
     if end_mode:
-        intervals = intervals[:-1]
-
+        mtl_eval_output[1] = mtl_eval_output[0]
+        mtl_eval_output = mtl_eval_output[:1]
+        intervals = trim_last_interval(intervals)
+    
     result_dict = {
-        'result': str(mtl_eval_output[-1]),
+        'result': str(mtl_eval_output[0]),
         'intervals': intervals
     }
 
@@ -327,3 +341,48 @@ def save_spec():
 def result_endpoint():
     output = json.loads(monitor())
     return render_template('result_page.html', result=output['result'], intervals=output['intervals'])
+
+def trim_last_interval(intervals):
+    if not intervals:
+        return intervals
+    start, end, *rest = intervals[-1]
+    if start == end:
+        # Case: End is single point
+        result = intervals[:-1]
+        start_prev, end_pre, *rest_pre = intervals[-1]
+        if end_pre == start_prev-1:
+            # remove previous
+            result = result[:-1]
+        else:
+            # shorten previous
+            result[-1] = (start_prev, end_pre-1, *rest_pre)
+        result.append((start-1, end-1, *rest))
+    else:
+        # Case: End is interval, shorten interval
+        result = intervals[:-1]
+        result.append((start, end-1, *rest))
+    return result
+
+def reverse_intervals(intervals):
+    if not intervals:
+        return intervals
+    
+    # increase end time of last interval by 1 since last interval is exclusive. Usually, (5,6) means at point 5, but in last interval it is (6,6) for point 6. We unify this behavior here and change it back later.
+    last_start, last_end, *rest = intervals[-1]
+    last_end += 1
+    intervals[-1] = (last_start, last_end, *rest)
+
+    # using the increased by one end time compensates for the fact that end times are exclusive. 
+    max_time = last_end
+
+    reversed_intervals = []
+    for start, end, *rest in reversed(intervals):
+        new_start = max_time - end
+        new_end = max_time - start
+        reversed_intervals.append((new_start, new_end, *rest))
+
+    last_start, last_end, *rest = reversed_intervals[-1]
+    last_end -= 1
+    reversed_intervals[-1] = (last_start, last_end, *rest)
+
+    return reversed_intervals
